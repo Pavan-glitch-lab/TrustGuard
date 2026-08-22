@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -22,6 +24,7 @@
     >
 
     <style>
+
         /* =========================================================
            TRUSTGUARD AUTH PAGE
            ========================================================= */
@@ -31,8 +34,11 @@
         }
 
         body {
+
             margin: 0;
+
             min-height: 100vh;
+
             font-family:
                 Inter,
                 -apple-system,
@@ -41,41 +47,58 @@
                 sans-serif;
 
             background:
+
                 radial-gradient(
                     circle at 20% 20%,
                     rgba(59, 130, 246, 0.20),
                     transparent 35%
                 ),
+
                 radial-gradient(
                     circle at 80% 80%,
                     rgba(139, 92, 246, 0.18),
                     transparent 35%
                 ),
+
                 #050816;
 
             color: #ffffff;
+
             overflow-x: hidden;
         }
+
 
         /* =========================================================
            ANIMATED BACKGROUND
            ========================================================= */
 
         .auth-page {
+
             min-height: 100vh;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             padding: 30px;
+
             position: relative;
+
             overflow: hidden;
         }
 
         .background-orb {
+
             position: absolute;
+
             border-radius: 50%;
+
             filter: blur(10px);
+
             opacity: 0.45;
+
             pointer-events: none;
 
             animation:
@@ -83,7 +106,9 @@
         }
 
         .orb-one {
+
             width: 260px;
+
             height: 260px;
 
             background:
@@ -94,11 +119,14 @@
                 );
 
             top: -80px;
+
             left: -80px;
         }
 
         .orb-two {
+
             width: 320px;
+
             height: 320px;
 
             background:
@@ -109,13 +137,16 @@
                 );
 
             bottom: -120px;
+
             right: -100px;
 
             animation-delay: -3s;
         }
 
         .orb-three {
+
             width: 180px;
+
             height: 180px;
 
             background:
@@ -126,39 +157,48 @@
                 );
 
             top: 45%;
+
             right: 8%;
 
             animation-delay: -5s;
         }
 
         @keyframes floatOrb {
+
             0%,
             100% {
+
                 transform:
                     translate3d(0, 0, 0)
                     scale(1);
             }
 
             50% {
+
                 transform:
                     translate3d(25px, -30px, 0)
                     scale(1.08);
             }
         }
 
+
         /* =========================================================
            GRID
            ========================================================= */
 
         .grid-background {
+
             position: absolute;
+
             inset: 0;
 
             background-image:
+
                 linear-gradient(
                     rgba(255, 255, 255, 0.025) 1px,
                     transparent 1px
                 ),
+
                 linear-gradient(
                     90deg,
                     rgba(255, 255, 255, 0.025) 1px,
@@ -179,16 +219,21 @@
             pointer-events: none;
         }
 
+
         /* =========================================================
            AUTH CARD
            ========================================================= */
 
         .auth-card {
+
             width: 100%;
+
             max-width: 470px;
+
             padding: 38px;
 
             position: relative;
+
             z-index: 5;
 
             background:
@@ -207,8 +252,10 @@
                 blur(24px);
 
             box-shadow:
+
                 0 30px 80px
                 rgba(0, 0, 0, 0.50),
+
                 inset 0 1px 0
                 rgba(255, 255, 255, 0.08);
 
@@ -218,7 +265,9 @@
         }
 
         @keyframes cardEnter {
+
             from {
+
                 opacity: 0;
 
                 transform:
@@ -227,6 +276,7 @@
             }
 
             to {
+
                 opacity: 1;
 
                 transform:
@@ -235,18 +285,23 @@
             }
         }
 
+
         /* =========================================================
            LOGO
            ========================================================= */
 
         .auth-logo {
+
             width: 76px;
+
             height: 76px;
 
             margin: 0 auto 18px;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             font-size: 38px;
@@ -254,6 +309,7 @@
             border-radius: 22px;
 
             background:
+
                 linear-gradient(
                     135deg,
                     rgba(59, 130, 246, 0.25),
@@ -265,6 +321,7 @@
                 rgba(96, 165, 250, 0.30);
 
             box-shadow:
+
                 0 0 40px
                 rgba(59, 130, 246, 0.20);
 
@@ -274,8 +331,10 @@
         }
 
         @keyframes logoPulse {
+
             0%,
             100% {
+
                 transform: scale(1);
 
                 box-shadow:
@@ -284,6 +343,7 @@
             }
 
             50% {
+
                 transform: scale(1.05);
 
                 box-shadow:
@@ -293,6 +353,7 @@
         }
 
         .auth-card h1 {
+
             margin: 0;
 
             text-align: center;
@@ -303,6 +364,7 @@
         }
 
         .auth-subtitle {
+
             margin: 8px 0 0;
 
             text-align: center;
@@ -315,6 +377,7 @@
         }
 
         .auth-description {
+
             margin: 10px 0 28px;
 
             text-align: center;
@@ -326,11 +389,13 @@
             line-height: 1.6;
         }
 
+
         /* =========================================================
            AUTH STEP
            ========================================================= */
 
         .auth-step {
+
             display: block;
 
             animation:
@@ -339,7 +404,9 @@
         }
 
         @keyframes stepEnter {
+
             from {
+
                 opacity: 0;
 
                 transform:
@@ -347,6 +414,7 @@
             }
 
             to {
+
                 opacity: 1;
 
                 transform:
@@ -354,15 +422,18 @@
             }
         }
 
+
         /* =========================================================
            FORM
            ========================================================= */
 
         .form-group {
+
             margin-bottom: 20px;
         }
 
         .form-group label {
+
             display: block;
 
             margin-bottom: 8px;
@@ -375,7 +446,9 @@
         }
 
         .form-group input {
+
             width: 100%;
+
             height: 52px;
 
             padding: 0 16px;
@@ -402,10 +475,12 @@
         }
 
         .form-group input::placeholder {
+
             color: #64748b;
         }
 
         .form-group input:focus {
+
             border-color: #3b82f6;
 
             box-shadow:
@@ -416,11 +491,13 @@
                 translateY(-1px);
         }
 
+
         /* =========================================================
            LOGIN OPTIONS
            ========================================================= */
 
         .login-options {
+
             display: flex;
 
             justify-content:
@@ -435,6 +512,7 @@
         }
 
         .remember-option {
+
             display: flex;
 
             gap: 8px;
@@ -447,12 +525,14 @@
         }
 
         .remember-option input {
+
             accent-color: #3b82f6;
 
             cursor: pointer;
         }
 
         .login-options a {
+
             color: #60a5fa;
 
             text-decoration: none;
@@ -462,15 +542,19 @@
         }
 
         .login-options a:hover {
+
             color: #93c5fd;
         }
+
 
         /* =========================================================
            BUTTON
            ========================================================= */
 
         .auth-button {
+
             width: 100%;
+
             height: 52px;
 
             border: 0;
@@ -486,6 +570,7 @@
             cursor: pointer;
 
             background:
+
                 linear-gradient(
                     135deg,
                     #2563eb,
@@ -493,10 +578,12 @@
                 );
 
             box-shadow:
+
                 0 12px 30px
                 rgba(37, 99, 235, 0.25);
 
             transition:
+
                 transform .2s,
                 box-shadow .2s,
                 opacity .2s;
@@ -507,17 +594,21 @@
         }
 
         .auth-button::before {
+
             content: "";
 
             position: absolute;
 
             top: 0;
+
             left: -100%;
 
             width: 100%;
+
             height: 100%;
 
             background:
+
                 linear-gradient(
                     90deg,
                     transparent,
@@ -530,19 +621,23 @@
         }
 
         .auth-button:hover {
+
             transform:
                 translateY(-2px);
 
             box-shadow:
+
                 0 16px 35px
                 rgba(37, 99, 235, 0.35);
         }
 
         .auth-button:hover::before {
+
             left: 100%;
         }
 
         .auth-button:disabled {
+
             opacity: 0.65;
 
             cursor:
@@ -552,11 +647,13 @@
                 none;
         }
 
+
         /* =========================================================
            DIVIDER
            ========================================================= */
 
         .auth-divider {
+
             display: flex;
 
             align-items: center;
@@ -573,6 +670,7 @@
 
         .auth-divider::before,
         .auth-divider::after {
+
             content: "";
 
             flex: 1;
@@ -583,12 +681,15 @@
                 rgba(148, 163, 184, 0.14);
         }
 
+
         /* =========================================================
            SOCIAL BUTTONS
            ========================================================= */
 
         .social-button {
+
             width: 100%;
+
             height: 48px;
 
             margin-bottom: 10px;
@@ -623,6 +724,7 @@
         }
 
         .social-button:hover {
+
             background:
                 rgba(30, 41, 59, 0.80);
 
@@ -634,17 +736,21 @@
         }
 
         .social-icon {
+
             font-weight: 800;
 
             font-size: 16px;
         }
+
 
         /* =========================================================
            SECONDARY BUTTON
            ========================================================= */
 
         .auth-secondary-button {
+
             width: 100%;
+
             height: 48px;
 
             display: flex;
@@ -676,6 +782,7 @@
         }
 
         .auth-secondary-button:hover {
+
             background:
                 rgba(59, 130, 246, 0.14);
 
@@ -683,11 +790,13 @@
                 translateY(-1px);
         }
 
+
         /* =========================================================
            MESSAGE
            ========================================================= */
 
         .auth-message {
+
             min-height: 20px;
 
             margin:
@@ -701,6 +810,7 @@
         }
 
         .auth-message.error {
+
             color: #f87171;
 
             animation:
@@ -708,32 +818,39 @@
         }
 
         .auth-message.success {
+
             color: #4ade80;
         }
 
         @keyframes shake {
+
             0%,
             100% {
+
                 transform:
                     translateX(0);
             }
 
             25% {
+
                 transform:
                     translateX(-5px);
             }
 
             75% {
+
                 transform:
                     translateX(5px);
             }
         }
+
 
         /* =========================================================
            SECURITY NOTE
            ========================================================= */
 
         .security-note {
+
             margin:
                 25px 0 0;
 
@@ -746,14 +863,17 @@
             line-height: 1.6;
         }
 
+
         /* =========================================================
            LOADING
            ========================================================= */
 
         .loading-spinner {
+
             display: inline-block;
 
             width: 16px;
+
             height: 16px;
 
             margin-right: 7px;
@@ -774,32 +894,41 @@
         }
 
         @keyframes spin {
+
             to {
+
                 transform:
                     rotate(360deg);
             }
         }
+
 
         /* =========================================================
            MOBILE
            ========================================================= */
 
         @media (max-width: 520px) {
+
             .auth-page {
+
                 padding: 18px;
             }
 
             .auth-card {
+
                 padding: 28px 20px;
 
                 border-radius: 22px;
             }
 
             .auth-card h1 {
+
                 font-size: 26px;
             }
         }
+
     </style>
+
 </head>
 
 <body>
@@ -844,8 +973,10 @@
         >
 
             <p class="auth-description">
+
                 Sign in securely to access your
                 TrustGuard dashboard.
+
             </p>
 
 
@@ -931,7 +1062,9 @@
 
 
             <div class="auth-divider">
+
                 <span>OR</span>
+
             </div>
 
 
@@ -1000,8 +1133,10 @@
 
 
         <p class="security-note">
+
             🔒 Your TrustGuard session is protected
             by server-side authentication.
+
         </p>
 
     </div>
@@ -1010,6 +1145,15 @@
 
 
 <script>
+
+/* ============================================================
+   BACKEND API URL
+   ONLY CHANGE REQUIRED
+   ============================================================ */
+
+const API_BASE_URL =
+    "https://trustguard-kxec.onrender.com";
+
 
 /* ============================================================
    ELEMENTS
@@ -1036,6 +1180,7 @@ function showLoginMessage(
     message,
     type = ""
 ) {
+
     loginMessage.textContent =
         message;
 
@@ -1043,10 +1188,13 @@ function showLoginMessage(
         "auth-message";
 
     if (type) {
+
         loginMessage.classList.add(
             type
         );
+
     }
+
 }
 
 
@@ -1057,6 +1205,7 @@ function showLoginMessage(
 function setLoginLoading(
     loading
 ) {
+
     loginButton.disabled =
         loading;
 
@@ -1071,6 +1220,7 @@ function setLoginLoading(
             "Sign In";
 
     }
+
 }
 
 
@@ -1079,7 +1229,9 @@ function setLoginLoading(
    ============================================================ */
 
 loginForm.addEventListener(
+
     "submit",
+
     async function(event) {
 
         event.preventDefault();
@@ -1125,6 +1277,7 @@ loginForm.addEventListener(
             true
         );
 
+
         showLoginMessage(
             "Checking your credentials..."
         );
@@ -1134,28 +1287,38 @@ loginForm.addEventListener(
 
             const response =
                 await fetch(
-                    "/api/login",
+
+                    `${API_BASE_URL}/api/login`,
+
                     {
+
                         method:
                             "POST",
 
                         headers: {
+
                             "Content-Type":
                                 "application/json"
+
                         },
 
                         credentials:
                             "include",
 
                         body:
+
                             JSON.stringify({
+
                                 email:
                                     email,
 
                                 password:
                                     password
+
                             })
+
                     }
+
                 );
 
 
@@ -1166,8 +1329,11 @@ loginForm.addEventListener(
             if (!response.ok) {
 
                 throw new Error(
+
                     result.error ||
+
                     "Login failed."
+
                 );
 
             }
@@ -1182,59 +1348,80 @@ loginForm.addEventListener(
              */
 
             if (
+
                 result.authenticated === true
+
             ) {
 
                 showLoginMessage(
+
                     "Login successful. Opening TrustGuard...",
+
                     "success"
+
                 );
 
 
                 setTimeout(
+
                     function() {
 
                         window.location.href =
                             "/index.html";
 
                     },
+
                     600
+
                 );
 
 
                 return;
+
             }
 
 
             throw new Error(
+
                 "Authentication was not completed."
+
             );
 
 
         } catch (error) {
 
             console.error(
+
                 "Login error:",
+
                 error
+
             );
 
 
             showLoginMessage(
+
                 error.message ||
+
                 "Login failed.",
+
                 "error"
+
             );
 
 
         } finally {
 
             setLoginLoading(
+
                 false
+
             );
 
         }
 
     }
+
 );
 
 
@@ -1243,15 +1430,20 @@ loginForm.addEventListener(
    ============================================================ */
 
 document
+
     .getElementById("googleLogin")
+
     .addEventListener(
+
         "click",
+
         function() {
 
             window.location.href =
-                "/auth/google";
+                `${API_BASE_URL}/auth/google`;
 
         }
+
     );
 
 
@@ -1260,17 +1452,25 @@ document
    ============================================================ */
 
 document
+
     .getElementById("microsoftLogin")
+
     .addEventListener(
+
         "click",
+
         function() {
 
             showLoginMessage(
+
                 "Microsoft OAuth has not been configured yet.",
+
                 "error"
+
             );
 
         }
+
     );
 
 
@@ -1279,17 +1479,25 @@ document
    ============================================================ */
 
 document
+
     .getElementById("githubLogin")
+
     .addEventListener(
+
         "click",
+
         function() {
 
             showLoginMessage(
+
                 "GitHub OAuth has not been configured yet.",
+
                 "error"
+
             );
 
         }
+
     );
 
 
@@ -1298,9 +1506,13 @@ document
    ============================================================ */
 
 document
+
     .getElementById("forgotPassword")
+
     .addEventListener(
+
         "click",
+
         async function(event) {
 
             event.preventDefault();
@@ -1308,48 +1520,68 @@ document
 
             const email =
                 document
+
                     .getElementById("email")
+
                     .value
+
                     .trim()
+
                     .toLowerCase();
 
 
             if (!email) {
 
                 showLoginMessage(
+
                     "Enter your email address first.",
+
                     "error"
+
                 );
 
                 return;
+
             }
 
 
             try {
 
                 showLoginMessage(
+
                     "Creating password reset request..."
+
                 );
 
 
                 const response =
                     await fetch(
-                        "/api/forgot-password",
+
+                        `${API_BASE_URL}/api/forgot-password`,
+
                         {
+
                             method:
                                 "POST",
 
                             headers: {
+
                                 "Content-Type":
                                     "application/json"
+
                             },
 
                             body:
+
                                 JSON.stringify({
+
                                     email:
                                         email
+
                                 })
+
                         }
+
                     );
 
 
@@ -1360,16 +1592,22 @@ document
                 if (!response.ok) {
 
                     throw new Error(
+
                         result.error ||
+
                         "Password reset request failed."
+
                     );
 
                 }
 
 
                 showLoginMessage(
+
                     result.message,
+
                     "success"
+
                 );
 
 
@@ -1378,7 +1616,9 @@ document
                  */
 
                 if (
+
                     result.development_reset_url
+
                 ) {
 
                     const existingLink =
@@ -1388,7 +1628,9 @@ document
 
 
                     if (
+
                         existingLink
+
                     ) {
 
                         existingLink.remove();
@@ -1427,9 +1669,13 @@ document
 
 
                     loginButton
+
                         .parentNode
+
                         .appendChild(
+
                             resetLink
+
                         );
 
                 }
@@ -1438,20 +1684,28 @@ document
             } catch (error) {
 
                 console.error(
+
                     "Password reset error:",
+
                     error
+
                 );
 
 
                 showLoginMessage(
+
                     error.message ||
+
                     "Password reset failed.",
+
                     "error"
+
                 );
 
             }
 
         }
+
     );
 
 
@@ -1465,14 +1719,19 @@ async function checkExistingSession() {
 
         const response =
             await fetch(
-                "/api/me",
+
+                `${API_BASE_URL}/api/me`,
+
                 {
+
                     method:
                         "GET",
 
                     credentials:
                         "include"
+
                 }
+
             );
 
 
@@ -1481,7 +1740,9 @@ async function checkExistingSession() {
 
 
         if (
+
             result.authenticated === true
+
         ) {
 
             window.location.href =
@@ -1489,10 +1750,13 @@ async function checkExistingSession() {
 
         }
 
+
     } catch (error) {
 
         console.log(
+
             "No existing TrustGuard session."
+
         );
 
     }
@@ -1505,4 +1769,5 @@ checkExistingSession();
 </script>
 
 </body>
+
 </html>
