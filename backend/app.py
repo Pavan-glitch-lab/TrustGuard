@@ -120,13 +120,11 @@ def send_password_reset_email(
 ):
 
     if not GMAIL_USERNAME:
-
         raise RuntimeError(
             "GMAIL_USERNAME is not configured in .env"
         )
 
     if not GMAIL_APP_PASSWORD:
-
         raise RuntimeError(
             "GMAIL_APP_PASSWORD is not configured in .env"
         )
@@ -152,15 +150,10 @@ Regards,
 
     html = f"""
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
     <meta charset="UTF-8">
-
     <title>Reset Your TrustGuard Password</title>
-
 </head>
 
 <body
@@ -225,7 +218,6 @@ Regards,
                 margin:30px 0;
             "
         >
-
             <a
                 href="{reset_url}"
                 style="
@@ -240,7 +232,6 @@ Regards,
             >
                 Reset Password
             </a>
-
         </p>
 
         <p
@@ -285,7 +276,6 @@ Regards,
     </div>
 
 </body>
-
 </html>
 """
 
@@ -321,9 +311,7 @@ Regards,
     ) as server:
 
         server.ehlo()
-
         server.starttls()
-
         server.ehlo()
 
         server.login(
@@ -657,11 +645,8 @@ def login():
     session.clear()
 
     session["user_id"] = user["id"]
-
     session["user_email"] = user["email"]
-
     session["user_name"] = user["full_name"]
-
     session["login_method"] = "password"
 
     return jsonify({
@@ -941,7 +926,7 @@ def get_approval_history():
 
 
 # ============================================================
-# SAVE APPROVAL HISTORY
+# CREATE APPROVAL HISTORY RECORD
 # ============================================================
 
 @app.route(
@@ -1011,8 +996,7 @@ def add_approval_history():
         "APPROVED",
         "REJECTED",
         "CANCELLED",
-        "PENDING",
-        "ANALYZED"
+        "PENDING"
     }
 
     if (
@@ -1073,7 +1057,7 @@ def add_approval_history():
     return jsonify({
 
         "message":
-            "Approval history saved.",
+            "Approval history record created.",
 
         "record":
             record
@@ -1082,14 +1066,110 @@ def add_approval_history():
 
 
 # ============================================================
-# DELETE APPROVAL HISTORY
+# UPDATE EXISTING APPROVAL HISTORY RECORD
 # ============================================================
-#
-# THIS IS THE IMPORTANT NEW ROUTE.
-#
-# It deletes only the currently logged-in user's history.
-# It does NOT delete another user's records.
-#
+
+@app.route(
+    "/approval-history/<record_id>",
+    methods=["PUT"]
+)
+@login_required
+def update_approval_history(
+    record_id
+):
+
+    data = (
+        request.get_json(
+            silent=True
+        )
+        or {}
+    )
+
+    human_decision = (
+        data.get(
+            "human_decision",
+            ""
+        )
+        .strip()
+        .upper()
+    )
+
+    allowed_human_decisions = {
+        "APPROVED",
+        "REJECTED",
+        "CANCELLED",
+        "PENDING"
+    }
+
+    if (
+        human_decision
+        not in allowed_human_decisions
+    ):
+
+        return jsonify({
+
+            "error":
+                "Invalid human decision."
+
+        }), 400
+
+    history = load_approval_history()
+
+    user_id = session.get(
+        "user_id"
+    )
+
+    target_record = None
+
+    for item in history:
+
+        if (
+            str(item.get("id", ""))
+            == str(record_id)
+            and
+            str(item.get("user_id", ""))
+            == str(user_id)
+        ):
+
+            target_record = item
+            break
+
+    if target_record is None:
+
+        return jsonify({
+
+            "error":
+                "Approval history record not found."
+
+        }), 404
+
+    target_record["human_decision"] = (
+        human_decision
+    )
+
+    target_record["updated_at"] = (
+        datetime.now().isoformat(
+            timespec="seconds"
+        )
+    )
+
+    save_approval_history(
+        history
+    )
+
+    return jsonify({
+
+        "message":
+            "Approval history record updated.",
+
+        "record":
+            target_record
+
+    }), 200
+
+
+# ============================================================
+# DELETE CURRENT USER APPROVAL HISTORY
 # ============================================================
 
 @app.route(
@@ -1099,68 +1179,46 @@ def add_approval_history():
 @login_required
 def delete_approval_history():
 
-    try:
+    history = load_approval_history()
 
-        history = load_approval_history()
+    user_id = session.get(
+        "user_id"
+    )
 
-        user_id = session.get(
-            "user_id"
-        )
+    original_count = len(
+        history
+    )
 
-        original_count = len(
-            history
-        )
+    remaining_history = [
 
-        remaining_history = [
+        item
 
-            item
+        for item in history
 
-            for item in history
+        if str(
+            item.get("user_id", "")
+        ) != str(user_id)
 
-            if str(
-                item.get("user_id", "")
-            ) != str(user_id)
+    ]
 
-        ]
+    deleted_count = (
+        original_count
+        - len(remaining_history)
+    )
 
-        deleted_count = (
-            original_count
-            - len(remaining_history)
-        )
+    save_approval_history(
+        remaining_history
+    )
 
-        save_approval_history(
-            remaining_history
-        )
+    return jsonify({
 
-        return jsonify({
+        "message":
+            "Approval history cleared successfully.",
 
-            "message":
-                "Approval history cleared successfully.",
+        "deleted_count":
+            deleted_count
 
-            "deleted_count":
-                deleted_count,
-
-            "history":
-                []
-
-        }), 200
-
-    except Exception as error:
-
-        print(
-            "Delete approval history error:",
-            error
-        )
-
-        return jsonify({
-
-            "error":
-                "Could not clear approval history.",
-
-            "details":
-                str(error)
-
-        }), 500
+    }), 200
 
 
 # ============================================================
@@ -1459,11 +1517,8 @@ def google_callback():
     session.clear()
 
     session["user_id"] = user["id"]
-
     session["user_email"] = user["email"]
-
     session["user_name"] = user["full_name"]
-
     session["login_method"] = "google"
 
     return redirect(
@@ -1701,6 +1756,7 @@ if __name__ == "__main__":
     print("POST   /analyze")
     print("GET    /approval-history")
     print("POST   /approval-history")
+    print("PUT    /approval-history/<record_id>")
     print("DELETE /approval-history")
 
     print("")

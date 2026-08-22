@@ -1052,77 +1052,71 @@ async function approveAction() {
    HIGH-RISK REJECTION
 ============================================================ */
 
-async function rejectAction() {
+async function rejectAction(event) {
+
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    console.log("Reject button clicked.");
 
     if (!currentAnalysis) {
-
-        alert(
-            "Please analyze an action first."
-        );
-
+        alert("Please analyze an action first.");
         return;
     }
 
+    const status = document.getElementById("approvalStatus");
+    const button = document.getElementById("rejectBtn");
 
-    const status =
-        document.getElementById(
-            "approvalStatus"
-        );
-
-    const button =
-        document.getElementById(
-            "rejectBtn"
-        );
-
+    console.log("Current analysis:", currentAnalysis);
 
     if (button) {
-
         button.disabled = true;
+        button.textContent = "Rejecting...";
     }
-
 
     try {
 
-        await saveApprovalDecision(
-            "REJECTED"
-        );
+        const data = await saveApprovalDecision("REJECTED");
 
+        console.log("Rejection saved successfully:", data);
 
         if (status) {
-
             status.textContent =
                 "✕ Action rejected by human reviewer.";
-
-            status.style.color =
-                "#dc2626";
+            status.style.color = "#dc2626";
         }
-
 
         disableApprovalButtons();
 
+        /*
+         * Reload history so the REJECTED decision
+         * immediately appears in Approval History.
+         */
+        await loadHistory();
 
     } catch (error) {
 
-        console.error(
-            error
-        );
-
+        console.error("REJECTION ERROR:", error);
 
         if (status) {
-
             status.textContent =
-                "Rejection failed: " +
-                error.message;
+                "Rejection failed: " + error.message;
 
-            status.style.color =
-                "#dc2626";
+            status.style.color = "#dc2626";
         }
+
+        alert(
+            "Rejection failed.\n\n" +
+            error.message
+        );
 
     } finally {
 
         if (button) {
-
             button.disabled = false;
+            button.textContent = "✕ Reject Action";
         }
     }
 }
