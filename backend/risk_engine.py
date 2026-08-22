@@ -5,8 +5,7 @@ import re
 
 
 def calculate_risk(action):
-
-    text = action.lower()
+    text = action.lower().strip()
 
     # =========================================================
     # 1. PRIVACY RISK
@@ -67,7 +66,7 @@ def calculate_risk(action):
     amount_detected = bool(
         re.search(
             r"(₹|\brs\.?\b|\brupees?\b|\bdollars?\b|\$)\s*[\d,]+",
-            text
+            text,
         )
     )
 
@@ -77,8 +76,9 @@ def calculate_risk(action):
     # Significant transaction amount
     large_amount = bool(
         re.search(
-            r"(₹|\brs\.?\b|\brupees?\b|\$)\s*(?:[1-9]\d{4,}|[\d,]{6,})",
-            text
+            r"(₹|\brs\.?\b|\brupees?\b|\$|\bdollars?\b)\s*"
+            r"(?:[1-9]\d{4,}|[\d,]{6,})",
+            text,
         )
     )
 
@@ -212,12 +212,18 @@ def calculate_risk(action):
     # =========================================================
     # RISK CLASSIFICATION
     # =========================================================
+    #
+    # 0 - 2  = LOW
+    # 3 - 8  = MEDIUM
+    # 9+     = HIGH
+    #
+    # =========================================================
 
-    if total_score <= 8:
+    if total_score <= 2:
         risk_level = "Low"
         decision = "Autonomous Execution"
 
-    elif total_score <= 16:
+    elif total_score <= 8:
         risk_level = "Medium"
         decision = "User Confirmation"
 
@@ -248,7 +254,8 @@ def calculate_risk(action):
 
     if irreversible_score > 0:
         explanation.append(
-            f"Potentially irreversible action detected ({irreversible_score}/5)."
+            f"Potentially irreversible action detected "
+            f"({irreversible_score}/5)."
         )
 
     if external_score > 0:
@@ -267,6 +274,7 @@ def calculate_risk(action):
 
     return {
         "action": action,
+
         "risk_factors": {
             "privacy_risk": privacy_score,
             "financial_risk": financial_score,
@@ -274,6 +282,7 @@ def calculate_risk(action):
             "irreversibility_risk": irreversible_score,
             "external_impact": external_score,
         },
+
         "total_score": total_score,
         "risk_level": risk_level,
         "decision": decision,

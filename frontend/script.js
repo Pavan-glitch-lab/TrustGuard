@@ -15,8 +15,6 @@ let currentAnalysis = null;
 
 /* ============================================================
    SAFE JSON FETCH
-   Prevents:
-   Unexpected token '<', "<!doctype..." is not valid JSON
 ============================================================ */
 
 async function apiFetch(url, options = {}) {
@@ -59,15 +57,6 @@ async function apiFetch(url, options = {}) {
         }
 
     } else {
-
-        /*
-         * This is the important protection against:
-         *
-         * Unexpected token '<'
-         *
-         * If Flask returns an HTML error page, we don't
-         * try to JSON.parse() it.
-         */
 
         throw new Error(
             `Server returned HTML/non-JSON response (${response.status}).`
@@ -128,7 +117,6 @@ async function checkAuthentication() {
                 }
             );
 
-
         if (
             !data ||
             data.authenticated !== true
@@ -137,11 +125,6 @@ async function checkAuthentication() {
             console.warn(
                 "User is not authenticated."
             );
-
-            /*
-             * If the current page is the dashboard,
-             * return to login.
-             */
 
             if (
                 window.location.pathname.includes(
@@ -158,21 +141,17 @@ async function checkAuthentication() {
             return false;
         }
 
-
         const user =
             data.user || {};
-
 
         updateUserProfile(
             user
         );
 
-
         console.log(
             "Authenticated user:",
             user
         );
-
 
         return true;
 
@@ -182,11 +161,6 @@ async function checkAuthentication() {
             "Authentication check failed:",
             error
         );
-
-        /*
-         * Do not immediately redirect on a temporary
-         * frontend/server problem.
-         */
 
         const currentUser =
             document.getElementById(
@@ -219,7 +193,6 @@ function updateUserProfile(user) {
         user.email ||
         "";
 
-
     const currentUser =
         document.getElementById(
             "currentUser"
@@ -230,13 +203,11 @@ function updateUserProfile(user) {
             "userAvatar"
         );
 
-
     if (currentUser) {
 
         currentUser.textContent =
             name;
     }
-
 
     if (avatar) {
 
@@ -253,20 +224,21 @@ function updateUserProfile(user) {
                 )
                 .join("");
 
-
         avatar.textContent =
             initials || "U";
     }
 
-
-    /*
-     * Save user information for the profile popup.
-     */
-
     window.trustGuardUser = {
-        id: user.id || "",
-        full_name: name,
-        email: email,
+
+        id:
+            user.id || "",
+
+        full_name:
+            name,
+
+        email:
+            email,
+
         login_method:
             user.login_method || "password"
     };
@@ -288,17 +260,10 @@ function setupProfileMenu() {
         return;
     }
 
-
-    /*
-     * Prevent the logout button from opening
-     * the profile popup.
-     */
-
     const logoutButton =
         userMenu.querySelector(
             ".logout-btn"
         );
-
 
     userMenu.addEventListener(
         "click",
@@ -317,7 +282,6 @@ function setupProfileMenu() {
                 return;
             }
 
-
             showProfile();
         }
     );
@@ -333,7 +297,6 @@ function showProfile() {
     const user =
         window.trustGuardUser;
 
-
     if (!user) {
 
         alert(
@@ -342,7 +305,6 @@ function showProfile() {
 
         return;
     }
-
 
     const name =
         user.full_name ||
@@ -356,7 +318,6 @@ function showProfile() {
         user.login_method === "google"
             ? "Google"
             : "Password";
-
 
     alert(
         "TRUSTGUARD PROFILE\n\n" +
@@ -389,24 +350,16 @@ async function logout() {
                 }
             );
 
-
         console.log(
             "Logout:",
             data
         );
 
-
         window.trustGuardUser =
             null;
 
-
-        /*
-         * Always return to login after successful logout.
-         */
-
         window.location.href =
             "/login.html";
-
 
     } catch (error) {
 
@@ -444,7 +397,6 @@ async function analyzeAction() {
             "result"
         );
 
-
     if (!input || !button || !result) {
 
         console.error(
@@ -454,10 +406,8 @@ async function analyzeAction() {
         return;
     }
 
-
     const action =
         input.value.trim();
-
 
     if (!action) {
 
@@ -470,24 +420,16 @@ async function analyzeAction() {
         return;
     }
 
-
-    /*
-     * Reset UI.
-     */
-
     result.classList.add(
         "hidden"
     );
 
-
     hideApprovalPanels();
-
 
     button.disabled = true;
 
     button.textContent =
         "Analyzing...";
-
 
     try {
 
@@ -496,44 +438,35 @@ async function analyzeAction() {
             action
         );
 
-
         const data =
             await apiFetch(
                 "/analyze",
                 {
                     method: "POST",
+
                     body: JSON.stringify({
-                        action: action
+                        action:
+                            action
                     })
                 }
             );
-
 
         console.log(
             "Analysis response:",
             data
         );
 
-
-        currentAnalysis = data;
-
+        currentAnalysis =
+            data;
 
         displayAnalysis(
             data
         );
 
-
-        /*
-         * Save every analysis to history.
-         * Human decision will be updated separately
-         * for medium/high-risk actions.
-         */
-
         await saveAnalysisToHistory(
             data,
             ""
         );
-
 
     } catch (error) {
 
@@ -542,11 +475,9 @@ async function analyzeAction() {
             error
         );
 
-
         result.classList.remove(
             "hidden"
         );
-
 
         const riskLevel =
             document.getElementById(
@@ -563,20 +494,17 @@ async function analyzeAction() {
                 "explanationList"
             );
 
-
         if (riskLevel) {
 
             riskLevel.textContent =
                 "ERROR";
         }
 
-
         if (decision) {
 
             decision.textContent =
                 "FAILED";
         }
-
 
         if (explanationList) {
 
@@ -586,20 +514,12 @@ async function analyzeAction() {
                 )}</li>`;
         }
 
-
         alert(
             "Analysis failed:\n\n" +
             error.message
         );
 
-
     } finally {
-
-        /*
-         * IMPORTANT:
-         * This guarantees the button NEVER remains
-         * stuck on "Analyzing..."
-         */
 
         button.disabled = false;
 
@@ -650,7 +570,6 @@ function displayAnalysis(data) {
             "hybridAgreement"
         );
 
-
     if (result) {
 
         result.classList.remove(
@@ -658,29 +577,24 @@ function displayAnalysis(data) {
         );
     }
 
-
     const finalRisk =
         data.risk_level ||
         data.final_risk_level ||
         "UNKNOWN";
-
 
     const finalDecision =
         data.decision ||
         data.final_decision ||
         "UNKNOWN";
 
-
     const ml =
         data.ml_prediction ??
         "N/A";
-
 
     const score =
         data.total_score ??
         data.risk_score ??
         0;
-
 
     if (riskLevel) {
 
@@ -690,7 +604,6 @@ function displayAnalysis(data) {
             ).toUpperCase();
     }
 
-
     if (decision) {
 
         decision.textContent =
@@ -698,7 +611,6 @@ function displayAnalysis(data) {
                 finalDecision
             );
     }
-
 
     if (mlPrediction) {
 
@@ -719,40 +631,33 @@ function displayAnalysis(data) {
         }
     }
 
-
     if (riskScore) {
 
         riskScore.textContent =
             String(score);
     }
 
-
-    /*
-     * Explanation
-     */
-
     if (explanationList) {
 
         explanationList.innerHTML =
             "";
-
 
         let explanations =
             data.explanation ||
             data.risk_factors ||
             [];
 
-
-        if (!Array.isArray(
-            explanations
-        )) {
+        if (
+            !Array.isArray(
+                explanations
+            )
+        ) {
 
             explanations =
                 [String(
                     explanations
                 )];
         }
-
 
         if (
             explanations.length === 0
@@ -762,7 +667,6 @@ function displayAnalysis(data) {
                 "TrustGuard completed the risk evaluation."
             ];
         }
-
 
         explanations.forEach(
             item => {
@@ -784,17 +688,11 @@ function displayAnalysis(data) {
         );
     }
 
-
-    /*
-     * Hybrid analysis
-     */
-
     if (hybridAgreement) {
 
         const hybrid =
             data.hybrid_analysis ||
             {};
-
 
         hybridAgreement.textContent =
             hybrid.agreement ||
@@ -803,20 +701,10 @@ function displayAnalysis(data) {
             "Hybrid engine completed the safety evaluation.";
     }
 
-
-    /*
-     * Show correct interaction panel.
-     */
-
     showRiskInteraction(
         finalRisk,
         finalDecision
     );
-
-
-    /*
-     * Scroll result into view.
-     */
 
     if (result) {
 
@@ -846,18 +734,15 @@ function showRiskInteraction(
 
     hideApprovalPanels();
 
-
     const normalizedRisk =
         String(
             risk || ""
         ).toLowerCase();
 
-
     const normalizedDecision =
         String(
             decision || ""
         ).toLowerCase();
-
 
     /*
      * HIGH RISK
@@ -887,10 +772,35 @@ function showRiskInteraction(
             );
         }
 
+        /*
+         * Make sure the high-risk buttons
+         * use the correct labels.
+         */
+
+        const approveButton =
+            document.getElementById(
+                "approveBtn"
+            );
+
+        const rejectButton =
+            document.getElementById(
+                "rejectBtn"
+            );
+
+        if (approveButton) {
+
+            approveButton.textContent =
+                "✓ Approve Action";
+        }
+
+        if (rejectButton) {
+
+            rejectButton.textContent =
+                "✕ Reject Action";
+        }
 
         return;
     }
-
 
     /*
      * MEDIUM RISK
@@ -917,10 +827,37 @@ function showRiskInteraction(
             );
         }
 
+        /*
+         * IMPORTANT:
+         *
+         * Medium-risk Cancel Action is now
+         * treated as REJECTED.
+         */
+
+        const confirmButton =
+            document.getElementById(
+                "confirmBtn"
+            );
+
+        const rejectButton =
+            document.getElementById(
+                "cancelBtn"
+            );
+
+        if (confirmButton) {
+
+            confirmButton.textContent =
+                "✓ Confirm Action";
+        }
+
+        if (rejectButton) {
+
+            rejectButton.textContent =
+                "✕ Reject Action";
+        }
 
         return;
     }
-
 
     /*
      * LOW RISK
@@ -948,7 +885,6 @@ function hideApprovalPanels() {
             "confirmationPanel"
         );
 
-
     if (approval) {
 
         approval.classList.add(
@@ -956,14 +892,12 @@ function hideApprovalPanels() {
         );
     }
 
-
     if (confirmation) {
 
         confirmation.classList.add(
             "hidden"
         );
     }
-
 
     const approvalStatus =
         document.getElementById(
@@ -975,18 +909,77 @@ function hideApprovalPanels() {
             "confirmationStatus"
         );
 
-
     if (approvalStatus) {
 
         approvalStatus.textContent =
             "";
     }
 
-
     if (confirmationStatus) {
 
         confirmationStatus.textContent =
             "";
+    }
+
+    /*
+     * Reset buttons so a new analysis can
+     * be reviewed normally.
+     */
+
+    const approveButton =
+        document.getElementById(
+            "approveBtn"
+        );
+
+    const rejectButton =
+        document.getElementById(
+            "rejectBtn"
+        );
+
+    const confirmButton =
+        document.getElementById(
+            "confirmBtn"
+        );
+
+    const cancelButton =
+        document.getElementById(
+            "cancelBtn"
+        );
+
+    if (approveButton) {
+
+        approveButton.disabled =
+            false;
+
+        approveButton.textContent =
+            "✓ Approve Action";
+    }
+
+    if (rejectButton) {
+
+        rejectButton.disabled =
+            false;
+
+        rejectButton.textContent =
+            "✕ Reject Action";
+    }
+
+    if (confirmButton) {
+
+        confirmButton.disabled =
+            false;
+
+        confirmButton.textContent =
+            "✓ Confirm Action";
+    }
+
+    if (cancelButton) {
+
+        cancelButton.disabled =
+            false;
+
+        cancelButton.textContent =
+            "✕ Reject Action";
     }
 }
 
@@ -996,42 +989,82 @@ function hideApprovalPanels() {
 ============================================================ */
 
 async function approveAction() {
-    console.log("Approve button clicked.");
+
+    console.log(
+        "Approve button clicked."
+    );
 
     if (!currentAnalysis) {
-        alert("Please analyze an action first.");
+
+        alert(
+            "Please analyze an action first."
+        );
+
         return;
     }
 
-    const status = document.getElementById("approvalStatus");
-    const button = document.getElementById("approveBtn");
+    const status =
+        document.getElementById(
+            "approvalStatus"
+        );
 
-    console.log("Current analysis:", currentAnalysis);
+    const button =
+        document.getElementById(
+            "approveBtn"
+        );
+
+    console.log(
+        "Current analysis:",
+        currentAnalysis
+    );
 
     if (button) {
-        button.disabled = true;
-        button.textContent = "Approving...";
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Approving...";
     }
 
     try {
-        const data = await saveApprovalDecision("APPROVED");
 
-        console.log("Approval saved successfully:", data);
+        const data =
+            await saveApprovalDecision(
+                "APPROVED"
+            );
+
+        console.log(
+            "Approval saved successfully:",
+            data
+        );
 
         if (status) {
-            status.textContent = "✓ Action approved by human reviewer.";
-            status.style.color = "#059669";
+
+            status.textContent =
+                "✓ Action approved by human reviewer.";
+
+            status.style.color =
+                "#059669";
         }
 
         disableApprovalButtons();
 
     } catch (error) {
-        console.error("APPROVAL ERROR:", error);
+
+        console.error(
+            "APPROVAL ERROR:",
+            error
+        );
 
         if (status) {
+
             status.textContent =
-                "Approval failed: " + error.message;
-            status.style.color = "#dc2626";
+                "Approval failed: " +
+                error.message;
+
+            status.style.color =
+                "#dc2626";
         }
 
         alert(
@@ -1040,9 +1073,14 @@ async function approveAction() {
         );
 
     } finally {
+
         if (button) {
-            button.disabled = false;
-            button.textContent = "✓ Approve Action";
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                "✓ Approve Action";
         }
     }
 }
@@ -1055,56 +1093,88 @@ async function approveAction() {
 async function rejectAction(event) {
 
     if (event) {
+
         event.preventDefault();
         event.stopPropagation();
     }
 
-    console.log("Reject button clicked.");
+    console.log(
+        "Reject button clicked."
+    );
 
     if (!currentAnalysis) {
-        alert("Please analyze an action first.");
+
+        alert(
+            "Please analyze an action first."
+        );
+
         return;
     }
 
-    const status = document.getElementById("approvalStatus");
-    const button = document.getElementById("rejectBtn");
+    const status =
+        document.getElementById(
+            "approvalStatus"
+        );
 
-    console.log("Current analysis:", currentAnalysis);
+    const button =
+        document.getElementById(
+            "rejectBtn"
+        );
+
+    console.log(
+        "Current analysis:",
+        currentAnalysis
+    );
 
     if (button) {
-        button.disabled = true;
-        button.textContent = "Rejecting...";
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Rejecting...";
     }
 
     try {
 
-        const data = await saveApprovalDecision("REJECTED");
+        const data =
+            await saveApprovalDecision(
+                "REJECTED"
+            );
 
-        console.log("Rejection saved successfully:", data);
+        console.log(
+            "Rejection saved successfully:",
+            data
+        );
 
         if (status) {
+
             status.textContent =
                 "✕ Action rejected by human reviewer.";
-            status.style.color = "#dc2626";
+
+            status.style.color =
+                "#dc2626";
         }
 
         disableApprovalButtons();
 
-        /*
-         * Reload history so the REJECTED decision
-         * immediately appears in Approval History.
-         */
         await loadHistory();
 
     } catch (error) {
 
-        console.error("REJECTION ERROR:", error);
+        console.error(
+            "REJECTION ERROR:",
+            error
+        );
 
         if (status) {
-            status.textContent =
-                "Rejection failed: " + error.message;
 
-            status.style.color = "#dc2626";
+            status.textContent =
+                "Rejection failed: " +
+                error.message;
+
+            status.style.color =
+                "#dc2626";
         }
 
         alert(
@@ -1115,8 +1185,12 @@ async function rejectAction(event) {
     } finally {
 
         if (button) {
-            button.disabled = false;
-            button.textContent = "✕ Reject Action";
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                "✕ Reject Action";
         }
     }
 }
@@ -1137,51 +1211,56 @@ async function confirmAction() {
         return;
     }
 
-
     const status =
         document.getElementById(
             "confirmationStatus"
         );
-
 
     const button =
         document.getElementById(
             "confirmBtn"
         );
 
-
     if (button) {
 
-        button.disabled = true;
-    }
+        button.disabled =
+            true;
 
+        button.textContent =
+            "Confirming...";
+    }
 
     try {
 
-        await saveApprovalDecision(
-            "APPROVED"
-        );
+        const data =
+            await saveApprovalDecision(
+                "APPROVED"
+            );
 
+        console.log(
+            "Confirmation saved:",
+            data
+        );
 
         if (status) {
 
             status.textContent =
-                "✓ Action confirmed.";
+                "✓ Action confirmed by user.";
 
             status.style.color =
                 "#059669";
         }
 
-
         disableConfirmationButtons();
 
+        await loadHistory();
 
     } catch (error) {
 
         console.error(
+            "CONFIRMATION ERROR:",
             error
         );
-
 
         if (status) {
 
@@ -1193,21 +1272,42 @@ async function confirmAction() {
                 "#dc2626";
         }
 
+        alert(
+            "Confirmation failed.\n\n" +
+            error.message
+        );
+
     } finally {
 
         if (button) {
 
-            button.disabled = false;
+            button.disabled =
+                false;
+
+            button.textContent =
+                "✓ Confirm Action";
         }
     }
 }
 
 
 /* ============================================================
-   MEDIUM-RISK CANCEL
+   MEDIUM-RISK REJECTION
+   IMPORTANT:
+   This replaces the old CANCELLED behavior.
 ============================================================ */
 
-async function cancelAction() {
+async function cancelAction(event) {
+
+    if (event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    console.log(
+        "Medium-risk Reject button clicked."
+    );
 
     if (!currentAnalysis) {
 
@@ -1218,67 +1318,93 @@ async function cancelAction() {
         return;
     }
 
-
     const status =
         document.getElementById(
             "confirmationStatus"
         );
-
 
     const button =
         document.getElementById(
             "cancelBtn"
         );
 
-
     if (button) {
 
-        button.disabled = true;
-    }
+        button.disabled =
+            true;
 
+        button.textContent =
+            "Rejecting...";
+    }
 
     try {
 
-        await saveApprovalDecision(
-            "CANCELLED"
-        );
+        /*
+         * IMPORTANT:
+         *
+         * Previously this sent:
+         *
+         * CANCELLED
+         *
+         * It now sends:
+         *
+         * REJECTED
+         */
 
+        const data =
+            await saveApprovalDecision(
+                "REJECTED"
+            );
+
+        console.log(
+            "Medium-risk rejection saved:",
+            data
+        );
 
         if (status) {
 
             status.textContent =
-                "✕ Action cancelled.";
+                "✕ Action rejected by user.";
 
             status.style.color =
                 "#dc2626";
         }
 
-
         disableConfirmationButtons();
 
+        await loadHistory();
 
     } catch (error) {
 
         console.error(
+            "MEDIUM-RISK REJECTION ERROR:",
             error
         );
-
 
         if (status) {
 
             status.textContent =
-                "Cancellation failed: " +
+                "Rejection failed: " +
                 error.message;
 
             status.style.color =
                 "#dc2626";
         }
 
+        alert(
+            "Rejection failed.\n\n" +
+            error.message
+        );
+
     } finally {
 
         if (button) {
 
-            button.disabled = false;
+            button.disabled =
+                false;
+
+            button.textContent =
+                "✕ Reject Action";
         }
     }
 }
@@ -1291,6 +1417,13 @@ async function cancelAction() {
 async function saveApprovalDecision(
     humanDecision
 ) {
+
+    if (!currentAnalysis) {
+
+        throw new Error(
+            "No analysis is available."
+        );
+    }
 
     const data =
         await apiFetch(
@@ -1320,9 +1453,7 @@ async function saveApprovalDecision(
             }
         );
 
-
     await loadHistory();
-
 
     return data;
 }
@@ -1366,7 +1497,6 @@ async function saveAnalysisToHistory(
             }
         );
 
-
         await loadHistory();
 
     } catch (error) {
@@ -1395,14 +1525,12 @@ function getMLPredictionText(
         return "";
     }
 
-
     if (
         typeof prediction === "string"
     ) {
 
         return prediction;
     }
-
 
     if (
         typeof prediction === "number"
@@ -1412,7 +1540,6 @@ function getMLPredictionText(
             prediction
         );
     }
-
 
     return (
         prediction.risk_level ||
@@ -1437,12 +1564,10 @@ async function loadHistory() {
             "historyContainer"
         );
 
-
     if (!container) {
 
         return;
     }
-
 
     try {
 
@@ -1455,7 +1580,6 @@ async function loadHistory() {
                 }
             );
 
-
         const history =
             Array.isArray(
                 data.history
@@ -1463,16 +1587,13 @@ async function loadHistory() {
                 ? data.history
                 : [];
 
-
         renderHistory(
             history
         );
 
-
         updateStatistics(
             history
         );
-
 
     } catch (error) {
 
@@ -1480,7 +1601,6 @@ async function loadHistory() {
             "History loading failed:",
             error
         );
-
 
         container.innerHTML =
             `<div class="empty-history">
@@ -1507,12 +1627,10 @@ function renderHistory(
             "historyContainer"
         );
 
-
     if (!container) {
 
         return;
     }
-
 
     if (
         history.length === 0
@@ -1526,18 +1644,11 @@ function renderHistory(
         return;
     }
 
-
-    /*
-     * Newest first.
-     */
-
     const sorted =
         [...history].reverse();
 
-
     container.innerHTML =
         "";
-
 
     sorted.forEach(
         item => {
@@ -1547,10 +1658,8 @@ function renderHistory(
                     "div"
                 );
 
-
             div.className =
                 "history-item";
-
 
             const risk =
                 String(
@@ -1558,18 +1667,15 @@ function renderHistory(
                     "UNKNOWN"
                 ).toUpperCase();
 
-
             const decision =
                 formatDecision(
                     item.decision ||
                     "-"
                 );
 
-
             const humanDecision =
                 item.human_decision ||
                 "ANALYZED";
-
 
             div.innerHTML =
                 `
@@ -1609,7 +1715,6 @@ function renderHistory(
                 </small>
                 `;
 
-
             container.appendChild(
                 div
             );
@@ -1646,11 +1751,9 @@ function updateStatistics(
             "highRiskCount"
         );
 
-
     let lowCount = 0;
     let mediumCount = 0;
     let highCount = 0;
-
 
     history.forEach(
         item => {
@@ -1660,7 +1763,6 @@ function updateStatistics(
                     item.risk ||
                     ""
                 ).toLowerCase();
-
 
             if (
                 risk.includes(
@@ -1689,13 +1791,11 @@ function updateStatistics(
         }
     );
 
-
     if (total) {
 
         total.textContent =
             history.length;
     }
-
 
     if (low) {
 
@@ -1703,13 +1803,11 @@ function updateStatistics(
             lowCount;
     }
 
-
     if (medium) {
 
         medium.textContent =
             mediumCount;
     }
-
 
     if (high) {
 
@@ -1724,52 +1822,51 @@ function updateStatistics(
 ============================================================ */
 
 async function clearHistory() {
-    const confirmed = window.confirm(
-        "Are you sure you want to clear your approval history?\n\n" +
-        "This will permanently delete all of your recorded decisions."
-    );
+
+    const confirmed =
+        window.confirm(
+            "Are you sure you want to clear your approval history?\n\n" +
+            "This will permanently delete all of your recorded decisions."
+        );
 
     if (!confirmed) {
+
         return;
     }
 
-    const button = document.querySelector(
-        ".clear-history-btn"
-    );
+    const button =
+        document.querySelector(
+            ".clear-history-btn"
+        );
 
     if (button) {
-        button.disabled = true;
-        button.textContent = "Clearing...";
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Clearing...";
     }
 
     try {
+
         console.log(
             "Clearing approval history..."
         );
 
-        const data = await apiFetch(
-            "/approval-history",
-            {
-                method: "DELETE"
-            }
-        );
+        const data =
+            await apiFetch(
+                "/approval-history",
+                {
+                    method: "DELETE"
+                }
+            );
 
         console.log(
             "Approval history cleared:",
             data
         );
 
-        /*
-         * Reload history from the backend.
-         *
-         * Because the backend now returns an empty
-         * history for this user, this also resets:
-         *
-         * Total Actions = 0
-         * Low Risk = 0
-         * Medium Risk = 0
-         * High Risk = 0
-         */
         await loadHistory();
 
         alert(
@@ -1779,6 +1876,7 @@ async function clearHistory() {
         );
 
     } catch (error) {
+
         console.error(
             "Clear history failed:",
             error
@@ -1790,9 +1888,14 @@ async function clearHistory() {
         );
 
     } finally {
+
         if (button) {
-            button.disabled = false;
-            button.textContent = "🗑 Clear History";
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                "🗑 Clear History";
         }
     }
 }
@@ -1814,19 +1917,23 @@ function disableApprovalButtons() {
             "rejectBtn"
         );
 
-
     if (approve) {
 
-        approve.disabled = true;
+        approve.disabled =
+            true;
     }
-
 
     if (reject) {
 
-        reject.disabled = true;
+        reject.disabled =
+            true;
     }
 }
 
+
+/* ============================================================
+   DISABLE CONFIRMATION BUTTONS
+============================================================ */
 
 function disableConfirmationButtons() {
 
@@ -1840,16 +1947,16 @@ function disableConfirmationButtons() {
             "cancelBtn"
         );
 
-
     if (confirm) {
 
-        confirm.disabled = true;
+        confirm.disabled =
+            true;
     }
-
 
     if (cancel) {
 
-        cancel.disabled = true;
+        cancel.disabled =
+            true;
     }
 }
 
@@ -1865,7 +1972,6 @@ function setupNavigation() {
             ".nav-item"
         );
 
-
     links.forEach(
         link => {
 
@@ -1879,7 +1985,6 @@ function setupNavigation() {
                                 "active"
                             )
                     );
-
 
                     this.classList.add(
                         "active"
@@ -1908,12 +2013,10 @@ function formatDecision(
         return "-";
     }
 
-
     const text =
         String(
             decision
         );
-
 
     return text
         .replace(

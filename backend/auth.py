@@ -121,7 +121,7 @@ def validate_password(password):
 
 
 # ============================================================
-# REGISTER
+# REGISTER USER
 # ============================================================
 
 def register_user(
@@ -147,12 +147,22 @@ def register_user(
         password or ""
     )
 
+
+    # --------------------------------------------------------
+    # NAME
+    # --------------------------------------------------------
+
     if not full_name:
 
         return False, {
             "error":
                 "Full name is required."
         }
+
+
+    # --------------------------------------------------------
+    # EMAIL
+    # --------------------------------------------------------
 
     if not email:
 
@@ -161,12 +171,18 @@ def register_user(
                 "Email is required."
         }
 
+
     if not validate_email(email):
 
         return False, {
             "error":
                 "Please enter a valid email address."
         }
+
+
+    # --------------------------------------------------------
+    # PASSWORD
+    # --------------------------------------------------------
 
     if not validate_password(password):
 
@@ -175,22 +191,51 @@ def register_user(
                 "Password must contain at least 8 characters."
         }
 
+
+    # --------------------------------------------------------
+    # CHECK EXISTING USER
+    # --------------------------------------------------------
+
     users = load_users()
 
     for user in users:
 
-        if normalize_email(
-            user.get("email", "")
-        ) == email:
+        existing_email = normalize_email(
+            user.get(
+                "email",
+                ""
+            )
+        )
+
+        if existing_email == email:
 
             return False, {
                 "error":
                     "An account with this email already exists."
             }
 
+
+    # --------------------------------------------------------
+    # CREATE USER ID
+    # --------------------------------------------------------
+
     user_id = datetime.now().strftime(
         "%Y%m%d%H%M%S%f"
     )
+
+
+    # --------------------------------------------------------
+    # HASH PASSWORD
+    # --------------------------------------------------------
+
+    password_hash = generate_password_hash(
+        password
+    )
+
+
+    # --------------------------------------------------------
+    # CREATE USER
+    # --------------------------------------------------------
 
     new_user = {
 
@@ -207,15 +252,18 @@ def register_user(
             mobile,
 
         "password_hash":
-            generate_password_hash(
-                password
-            ),
+            password_hash,
 
         "created_at":
             datetime.now().isoformat(
                 timespec="seconds"
             )
     }
+
+
+    # --------------------------------------------------------
+    # SAVE USER
+    # --------------------------------------------------------
 
     users.append(
         new_user
@@ -224,6 +272,12 @@ def register_user(
     save_users(
         users
     )
+
+
+    # --------------------------------------------------------
+    # RETURN SAFE USER DATA
+    # DO NOT RETURN PASSWORD HASH
+    # --------------------------------------------------------
 
     return True, {
 
@@ -261,55 +315,144 @@ def authenticate_user(
         password or ""
     )
 
+
+    # --------------------------------------------------------
+    # BASIC VALIDATION
+    # --------------------------------------------------------
+
+    if not email or not password:
+        return None
+
+
+    # --------------------------------------------------------
+    # LOAD USERS
+    # --------------------------------------------------------
+
     users = load_users()
+
+
+    # --------------------------------------------------------
+    # FIND USER
+    # --------------------------------------------------------
 
     for user in users:
 
-        if normalize_email(
-            user.get("email", "")
-        ) != email:
+        stored_email = normalize_email(
+            user.get(
+                "email",
+                ""
+            )
+        )
 
+        if stored_email != email:
             continue
+
+
+        # ----------------------------------------------------
+        # GET PASSWORD HASH
+        # ----------------------------------------------------
 
         password_hash = user.get(
             "password_hash",
             ""
         )
 
+
         if not password_hash:
+
+            print(
+                "LOGIN ERROR: User exists but has no password_hash:",
+                email
+            )
 
             return None
 
-        if check_password_hash(
-            password_hash,
-            password
-        ):
+
+        # ----------------------------------------------------
+        # CHECK PASSWORD
+        # ----------------------------------------------------
+
+        try:
+
+            password_is_correct = (
+                check_password_hash(
+                    password_hash,
+                    password
+                )
+            )
+
+        except Exception as error:
+
+            print(
+                "LOGIN PASSWORD CHECK ERROR:",
+                error
+            )
+
+            return None
+
+
+        if password_is_correct:
+
+            print(
+                "LOGIN SUCCESS:",
+                email
+            )
 
             return {
 
                 "id":
-                    user.get("id"),
+                    user.get(
+                        "id"
+                    ),
 
                 "full_name":
-                    user.get("full_name"),
+                    user.get(
+                        "full_name"
+                    ),
 
                 "email":
-                    user.get("email"),
+                    user.get(
+                        "email"
+                    ),
 
                 "mobile":
-                    user.get("mobile"),
+                    user.get(
+                        "mobile"
+                    ),
 
                 "created_at":
-                    user.get("created_at")
+                    user.get(
+                        "created_at"
+                    )
             }
 
+
+        # ----------------------------------------------------
+        # EMAIL EXISTS BUT PASSWORD IS WRONG
+        # ----------------------------------------------------
+
+        print(
+            "LOGIN FAILED: Incorrect password for:",
+            email
+        )
+
         return None
+
+
+    # --------------------------------------------------------
+    # USER NOT FOUND
+    # --------------------------------------------------------
+
+    print(
+        "LOGIN FAILED: User not found:",
+        email
+    )
 
     return None
 
 
 # ============================================================
-# FIND USER
+# FIND USER BY EMAIL
 # ============================================================
 
 def find_user_by_email(email):
@@ -323,7 +466,10 @@ def find_user_by_email(email):
     for user in users:
 
         if normalize_email(
-            user.get("email", "")
+            user.get(
+                "email",
+                ""
+            )
         ) == email:
 
             return user
@@ -346,19 +492,27 @@ def create_password_reset_token(email):
     for user in users:
 
         if normalize_email(
-            user.get("email", "")
+            user.get(
+                "email",
+                ""
+            )
         ) != email:
 
             continue
+
 
         token = secrets.token_urlsafe(
             32
         )
 
+
         expires_at = (
             datetime.utcnow()
-            + timedelta(minutes=15)
+            + timedelta(
+                minutes=15
+            )
         ).isoformat()
+
 
         user["reset_token"] = token
 
@@ -366,9 +520,14 @@ def create_password_reset_token(email):
             expires_at
         )
 
-        save_users(users)
+
+        save_users(
+            users
+        )
+
 
         return token
+
 
     return None
 
@@ -391,9 +550,11 @@ def reset_password(
                 "Password must contain at least 8 characters."
         }
 
+
     users = load_users()
 
     now = datetime.utcnow()
+
 
     for user in users:
 
@@ -403,9 +564,11 @@ def reset_password(
 
             continue
 
+
         expires_text = user.get(
             "reset_expires"
         )
+
 
         if not expires_text:
 
@@ -413,6 +576,7 @@ def reset_password(
                 "error":
                     "Reset token is invalid."
             }
+
 
         try:
 
@@ -427,6 +591,7 @@ def reset_password(
                     "Reset token is invalid."
             }
 
+
         if now > expires_at:
 
             user.pop(
@@ -439,18 +604,30 @@ def reset_password(
                 None
             )
 
-            save_users(users)
+            save_users(
+                users
+            )
 
             return False, {
                 "error":
                     "Reset token has expired."
             }
 
+
+        # ----------------------------------------------------
+        # UPDATE PASSWORD
+        # ----------------------------------------------------
+
         user["password_hash"] = (
             generate_password_hash(
                 new_password
             )
         )
+
+
+        # ----------------------------------------------------
+        # REMOVE USED RESET TOKEN
+        # ----------------------------------------------------
 
         user.pop(
             "reset_token",
@@ -462,12 +639,17 @@ def reset_password(
             None
         )
 
-        save_users(users)
+
+        save_users(
+            users
+        )
+
 
         return True, {
             "message":
                 "Password has been reset successfully."
         }
+
 
     return False, {
         "error":
