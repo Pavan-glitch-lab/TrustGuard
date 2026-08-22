@@ -131,9 +131,7 @@ def send_password_reset_email(
             "GMAIL_APP_PASSWORD is not configured in .env"
         )
 
-
     subject = "TrustGuard AI - Reset Your Password"
-
 
     plain_text = f"""
 Hello,
@@ -151,7 +149,6 @@ If you did not request a password reset, you can safely ignore this email.
 Regards,
 {GMAIL_FROM_NAME}
 """
-
 
     html = f"""
 <!DOCTYPE html>
@@ -292,7 +289,6 @@ Regards,
 </html>
 """
 
-
     message = MIMEMultipart(
         "alternative"
     )
@@ -304,7 +300,6 @@ Regards,
     )
 
     message["To"] = recipient_email
-
 
     message.attach(
         MIMEText(
@@ -319,7 +314,6 @@ Regards,
             "html"
         )
     )
-
 
     with smtplib.SMTP(
         GMAIL_SMTP_SERVER,
@@ -549,14 +543,12 @@ def register():
         ""
     )
 
-
     if not full_name:
 
         return jsonify({
             "error":
                 "Full name is required."
         }), 400
-
 
     if not email:
 
@@ -565,14 +557,12 @@ def register():
                 "Email is required."
         }), 400
 
-
     if not password:
 
         return jsonify({
             "error":
                 "Password is required."
         }), 400
-
 
     if password != confirm_password:
 
@@ -581,7 +571,6 @@ def register():
                 "Passwords do not match."
         }), 400
 
-
     success, result = register_user(
         full_name,
         email,
@@ -589,13 +578,11 @@ def register():
         password
     )
 
-
     if not success:
 
         return jsonify(
             result
         ), 400
-
 
     return jsonify({
 
@@ -639,14 +626,12 @@ def login():
         ""
     )
 
-
     if not email:
 
         return jsonify({
             "error":
                 "Email is required."
         }), 400
-
 
     if not password:
 
@@ -655,12 +640,10 @@ def login():
                 "Password is required."
         }), 400
 
-
     user = authenticate_user(
         email,
         password
     )
-
 
     if user is None:
 
@@ -671,7 +654,6 @@ def login():
                 False
         }), 401
 
-
     session.clear()
 
     session["user_id"] = user["id"]
@@ -681,7 +663,6 @@ def login():
     session["user_name"] = user["full_name"]
 
     session["login_method"] = "password"
-
 
     return jsonify({
 
@@ -718,7 +699,6 @@ def current_user():
                 None
 
         }), 200
-
 
     return jsonify({
 
@@ -830,7 +810,6 @@ def analyze():
         or {}
     )
 
-
     action = (
         data.get(
             "action",
@@ -839,14 +818,12 @@ def analyze():
         .strip()
     )
 
-
     if not action:
 
         return jsonify({
             "error":
                 "Action is required."
         }), 400
-
 
     # --------------------------------------------------------
     # RULE ENGINE
@@ -856,7 +833,6 @@ def analyze():
         action
     )
 
-
     # --------------------------------------------------------
     # ML PREDICTION
     # --------------------------------------------------------
@@ -864,7 +840,6 @@ def analyze():
     ml_risk = predict_risk(
         action
     )
-
 
     # --------------------------------------------------------
     # HYBRID DECISION
@@ -874,7 +849,6 @@ def analyze():
         rule_result,
         ml_risk
     )
-
 
     # --------------------------------------------------------
     # FINAL RESULT
@@ -942,11 +916,9 @@ def get_approval_history():
 
     history = load_approval_history()
 
-
     user_id = session.get(
         "user_id"
     )
-
 
     user_history = [
 
@@ -959,7 +931,6 @@ def get_approval_history():
         ) == str(user_id)
 
     ]
-
 
     return jsonify({
 
@@ -986,7 +957,6 @@ def add_approval_history():
         )
         or {}
     )
-
 
     action = (
         data.get(
@@ -1029,7 +999,6 @@ def add_approval_history():
         .upper()
     )
 
-
     if not action:
 
         return jsonify({
@@ -1037,15 +1006,14 @@ def add_approval_history():
                 "Action is required."
         }), 400
 
-
     allowed_human_decisions = {
         "",
         "APPROVED",
         "REJECTED",
         "CANCELLED",
-        "PENDING"
+        "PENDING",
+        "ANALYZED"
     }
-
 
     if (
         human_decision
@@ -1059,9 +1027,7 @@ def add_approval_history():
 
         }), 400
 
-
     history = load_approval_history()
-
 
     record = {
 
@@ -1096,16 +1062,13 @@ def add_approval_history():
             )
     }
 
-
     history.append(
         record
     )
 
-
     save_approval_history(
         history
     )
-
 
     return jsonify({
 
@@ -1116,6 +1079,88 @@ def add_approval_history():
             record
 
     }), 201
+
+
+# ============================================================
+# DELETE APPROVAL HISTORY
+# ============================================================
+#
+# THIS IS THE IMPORTANT NEW ROUTE.
+#
+# It deletes only the currently logged-in user's history.
+# It does NOT delete another user's records.
+#
+# ============================================================
+
+@app.route(
+    "/approval-history",
+    methods=["DELETE"]
+)
+@login_required
+def delete_approval_history():
+
+    try:
+
+        history = load_approval_history()
+
+        user_id = session.get(
+            "user_id"
+        )
+
+        original_count = len(
+            history
+        )
+
+        remaining_history = [
+
+            item
+
+            for item in history
+
+            if str(
+                item.get("user_id", "")
+            ) != str(user_id)
+
+        ]
+
+        deleted_count = (
+            original_count
+            - len(remaining_history)
+        )
+
+        save_approval_history(
+            remaining_history
+        )
+
+        return jsonify({
+
+            "message":
+                "Approval history cleared successfully.",
+
+            "deleted_count":
+                deleted_count,
+
+            "history":
+                []
+
+        }), 200
+
+    except Exception as error:
+
+        print(
+            "Delete approval history error:",
+            error
+        )
+
+        return jsonify({
+
+            "error":
+                "Could not clear approval history.",
+
+            "details":
+                str(error)
+
+        }), 500
 
 
 # ============================================================
@@ -1140,7 +1185,6 @@ def google_login():
 
         }), 503
 
-
     if not GOOGLE_CLIENT_SECRET:
 
         return jsonify({
@@ -1150,7 +1194,6 @@ def google_login():
 
         }), 503
 
-
     state = secrets.token_urlsafe(
         32
     )
@@ -1159,11 +1202,9 @@ def google_login():
         state
     )
 
-
     authorization_endpoint = (
         "https://accounts.google.com/o/oauth2/v2/auth"
     )
-
 
     params = {
 
@@ -1191,13 +1232,11 @@ def google_login():
             "select_account"
     }
 
-
     authorization_url = (
         authorization_endpoint
         + "?"
         + urlencode(params)
     )
-
 
     return redirect(
         authorization_url
@@ -1221,14 +1260,12 @@ def google_callback():
             503
         )
 
-
     if not GOOGLE_CLIENT_SECRET:
 
         return (
             "Google OAuth client secret is not configured.",
             503
         )
-
 
     returned_state = request.args.get(
         "state"
@@ -1237,7 +1274,6 @@ def google_callback():
     saved_state = session.get(
         "google_oauth_state"
     )
-
 
     if (
         not returned_state
@@ -1251,11 +1287,9 @@ def google_callback():
 
         }), 400
 
-
     code = request.args.get(
         "code"
     )
-
 
     if not code:
 
@@ -1270,7 +1304,6 @@ def google_callback():
                 error
 
         }), 400
-
 
     # --------------------------------------------------------
     # Exchange Google authorization code
@@ -1301,7 +1334,6 @@ def google_callback():
         timeout=15
     )
 
-
     if not token_response.ok:
 
         return jsonify({
@@ -1311,16 +1343,13 @@ def google_callback():
 
         }), 400
 
-
     token_data = (
         token_response.json()
     )
 
-
     access_token = token_data.get(
         "access_token"
     )
-
 
     if not access_token:
 
@@ -1330,7 +1359,6 @@ def google_callback():
                 "Google did not return an access token."
 
         }), 400
-
 
     # --------------------------------------------------------
     # Get Google user information
@@ -1350,7 +1378,6 @@ def google_callback():
         timeout=15
     )
 
-
     if not user_response.ok:
 
         return jsonify({
@@ -1360,11 +1387,9 @@ def google_callback():
 
         }), 400
 
-
     google_user = (
         user_response.json()
     )
-
 
     google_id = google_user.get(
         "sub"
@@ -1387,7 +1412,6 @@ def google_callback():
         .strip()
     )
 
-
     if not google_id or not email:
 
         return jsonify({
@@ -1397,7 +1421,6 @@ def google_callback():
 
         }), 400
 
-
     # --------------------------------------------------------
     # Find or create TrustGuard account
     # --------------------------------------------------------
@@ -1405,7 +1428,6 @@ def google_callback():
     user = find_user_by_email(
         email
     )
-
 
     if user is None:
 
@@ -1422,16 +1444,13 @@ def google_callback():
             )
         )
 
-
         if not success:
 
             return jsonify(
                 result
             ), 400
 
-
         user = result
-
 
     # --------------------------------------------------------
     # Create TrustGuard session
@@ -1446,7 +1465,6 @@ def google_callback():
     session["user_name"] = user["full_name"]
 
     session["login_method"] = "google"
-
 
     return redirect(
         "/index.html"
@@ -1470,7 +1488,6 @@ def forgot_password():
         or {}
     )
 
-
     email = (
         data.get(
             "email",
@@ -1479,7 +1496,6 @@ def forgot_password():
         .strip()
         .lower()
     )
-
 
     if not email:
 
@@ -1490,11 +1506,9 @@ def forgot_password():
 
         }), 400
 
-
     token = create_password_reset_token(
         email
     )
-
 
     response = {
 
@@ -1502,7 +1516,6 @@ def forgot_password():
             "If an account exists for this email, a password reset link has been sent."
 
     }
-
 
     # --------------------------------------------------------
     # SEND RESET EMAIL
@@ -1522,7 +1535,6 @@ def forgot_password():
             })
         )
 
-
         try:
 
             send_password_reset_email(
@@ -1540,7 +1552,6 @@ def forgot_password():
                 "Password reset email error:",
                 error
             )
-
 
     return jsonify(
         response
@@ -1564,7 +1575,6 @@ def reset_password_endpoint():
         or {}
     )
 
-
     token = (
         data.get(
             "token",
@@ -1583,7 +1593,6 @@ def reset_password_endpoint():
         ""
     )
 
-
     if not token:
 
         return jsonify({
@@ -1592,7 +1601,6 @@ def reset_password_endpoint():
                 "Reset token is required."
 
         }), 400
-
 
     if not new_password:
 
@@ -1603,7 +1611,6 @@ def reset_password_endpoint():
 
         }), 400
 
-
     if new_password != confirm_password:
 
         return jsonify({
@@ -1613,7 +1620,6 @@ def reset_password_endpoint():
 
         }), 400
 
-
     success, result = reset_password(
 
         token,
@@ -1622,13 +1628,11 @@ def reset_password_endpoint():
 
     )
 
-
     if not success:
 
         return jsonify(
             result
         ), 400
-
 
     return jsonify(
         result
@@ -1694,9 +1698,10 @@ if __name__ == "__main__":
     print("")
 
     print("TrustGuard:")
-    print("POST /analyze")
-    print("GET  /approval-history")
-    print("POST /approval-history")
+    print("POST   /analyze")
+    print("GET    /approval-history")
+    print("POST   /approval-history")
+    print("DELETE /approval-history")
 
     print("")
 
@@ -1706,9 +1711,13 @@ if __name__ == "__main__":
     print("========================================")
     print("")
 
-
     app.run(
-    host="0.0.0.0",
-    port=int(os.environ.get("PORT", 5000)),
-    debug=False
-)
+        host="0.0.0.0",
+        port=int(
+            os.environ.get(
+                "PORT",
+                5000
+            )
+        ),
+        debug=False
+    )
