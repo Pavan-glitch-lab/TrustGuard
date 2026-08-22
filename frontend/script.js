@@ -996,75 +996,53 @@ function hideApprovalPanels() {
 ============================================================ */
 
 async function approveAction() {
+    console.log("Approve button clicked.");
 
     if (!currentAnalysis) {
-
-        alert(
-            "Please analyze an action first."
-        );
-
+        alert("Please analyze an action first.");
         return;
     }
 
+    const status = document.getElementById("approvalStatus");
+    const button = document.getElementById("approveBtn");
 
-    const status =
-        document.getElementById(
-            "approvalStatus"
-        );
-
-    const button =
-        document.getElementById(
-            "approveBtn"
-        );
-
+    console.log("Current analysis:", currentAnalysis);
 
     if (button) {
-
         button.disabled = true;
+        button.textContent = "Approving...";
     }
 
-
     try {
+        const data = await saveApprovalDecision("APPROVED");
 
-        await saveApprovalDecision(
-            "APPROVED"
-        );
-
+        console.log("Approval saved successfully:", data);
 
         if (status) {
-
-            status.textContent =
-                "✓ Action approved by human reviewer.";
-
-            status.style.color =
-                "#059669";
+            status.textContent = "✓ Action approved by human reviewer.";
+            status.style.color = "#059669";
         }
-
 
         disableApprovalButtons();
 
-
     } catch (error) {
-
-        console.error(
-            error
-        );
+        console.error("APPROVAL ERROR:", error);
 
         if (status) {
-
             status.textContent =
-                "Approval failed: " +
-                error.message;
-
-            status.style.color =
-                "#dc2626";
+                "Approval failed: " + error.message;
+            status.style.color = "#dc2626";
         }
 
+        alert(
+            "Approval failed.\n\n" +
+            error.message
+        );
+
     } finally {
-
         if (button) {
-
             button.disabled = false;
+            button.textContent = "✓ Approve Action";
         }
     }
 }
@@ -1752,19 +1730,77 @@ function updateStatistics(
 ============================================================ */
 
 async function clearHistory() {
-
-    /*
-     * Your current backend does not provide a DELETE
-     * /approval-history endpoint.
-     *
-     * Therefore we do NOT pretend that the button
-     * successfully deleted server records.
-     */
-
-    alert(
-        "History is stored by the TrustGuard backend. " +
-        "The current backend does not provide a delete-history API yet."
+    const confirmed = window.confirm(
+        "Are you sure you want to clear your approval history?\n\n" +
+        "This will permanently delete all of your recorded decisions."
     );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const button = document.querySelector(
+        ".clear-history-btn"
+    );
+
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Clearing...";
+    }
+
+    try {
+        console.log(
+            "Clearing approval history..."
+        );
+
+        const data = await apiFetch(
+            "/approval-history",
+            {
+                method: "DELETE"
+            }
+        );
+
+        console.log(
+            "Approval history cleared:",
+            data
+        );
+
+        /*
+         * Reload history from the backend.
+         *
+         * Because the backend now returns an empty
+         * history for this user, this also resets:
+         *
+         * Total Actions = 0
+         * Low Risk = 0
+         * Medium Risk = 0
+         * High Risk = 0
+         */
+        await loadHistory();
+
+        alert(
+            "History cleared successfully.\n\n" +
+            "Deleted records: " +
+            (data.deleted_count ?? 0)
+        );
+
+    } catch (error) {
+        console.error(
+            "Clear history failed:",
+            error
+        );
+
+        alert(
+            "Could not clear history.\n\n" +
+            error.message
+        );
+
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = "🗑 Clear History";
+        }
+    }
 }
 
 
