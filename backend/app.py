@@ -53,8 +53,21 @@ app.secret_key = os.environ.get(
     "trustguard-development-secret-change-this"
 )
 
+FRONTEND_URL = os.environ.get(
+    "FRONTEND_URL",
+    "https://trustguard-1-fsvc.onrender.com"
+)
+
 CORS(
     app,
+    resources={
+        r"/api/*": {
+            "origins": [FRONTEND_URL]
+        },
+        r"/auth/*": {
+            "origins": [FRONTEND_URL]
+        }
+    },
     supports_credentials=True
 )
 
@@ -92,22 +105,24 @@ GMAIL_SMTP_PORT = int(
 GMAIL_USERNAME = os.environ.get(
     "GMAIL_USERNAME",
     ""
-)
+).strip()
 
 GMAIL_APP_PASSWORD = os.environ.get(
     "GMAIL_APP_PASSWORD",
     ""
-)
+).strip().replace(" ", "")
 
 GMAIL_FROM_NAME = os.environ.get(
     "GMAIL_FROM_NAME",
     "TrustGuard AI"
-)
+).strip()
 
-RESET_URL = os.environ.get(
-    "RESET_URL",
-    "http://127.0.0.1:5000/reset-password.html"
-)
+PUBLIC_BASE_URL = os.environ.get(
+    "PUBLIC_BASE_URL",
+    "https://trustguard-1-fsvc.onrender.com"
+).rstrip("/")
+
+RESET_PAGE = "/reset-password.html"
 
 
 # ============================================================
@@ -119,15 +134,22 @@ def send_password_reset_email(
     reset_url
 ):
 
-    if not GMAIL_USERNAME:
+    resend_api_key = os.environ.get(
+        "RESEND_API_KEY",
+        ""
+    ).strip()
+
+    if not resend_api_key:
         raise RuntimeError(
-            "GMAIL_USERNAME is not configured in .env"
+            "RESEND_API_KEY is missing from Render Environment Variables."
         )
 
-    if not GMAIL_APP_PASSWORD:
-        raise RuntimeError(
-            "GMAIL_APP_PASSWORD is not configured in .env"
-        )
+    print("========================================")
+    print("PASSWORD RESET EMAIL")
+    print("Using Resend API")
+    print(f"To: {recipient_email}")
+    print(f"Reset URL: {reset_url}")
+    print("========================================")
 
     subject = "TrustGuard AI - Reset Your Password"
 
@@ -279,50 +301,97 @@ Regards,
 </html>
 """
 
-    message = MIMEMultipart(
-        "alternative"
-    )
+    resend_payload = {
 
-    message["Subject"] = subject
+        "from":
+            "onboarding@resend.dev",
 
-    message["From"] = (
-        f"{GMAIL_FROM_NAME} <{GMAIL_USERNAME}>"
-    )
+        "to": [
+            recipient_email
+        ],
 
-    message["To"] = recipient_email
+        "subject":
+            subject,
 
-    message.attach(
-        MIMEText(
+        "text":
             plain_text,
-            "plain"
+
+        "html":
+            html
+
+    }
+
+    try:
+
+        print("Sending password reset email using Resend API...")
+
+        response = requests.post(
+
+            "https://api.resend.com/emails",
+
+            headers={
+
+                "Authorization":
+                    f"Bearer {resend_api_key}",
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+            json=resend_payload,
+
+            timeout=30
+
         )
-    )
 
-    message.attach(
-        MIMEText(
-            html,
-            "html"
-        )
-    )
-
-    with smtplib.SMTP(
-        GMAIL_SMTP_SERVER,
-        GMAIL_SMTP_PORT
-    ) as server:
-
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-
-        server.login(
-            GMAIL_USERNAME,
-            GMAIL_APP_PASSWORD
+        print(
+            f"Resend HTTP status: {response.status_code}"
         )
 
-        server.sendmail(
-            GMAIL_USERNAME,
-            recipient_email,
-            message.as_string()
+        if response.ok:
+
+            response_data = response.json()
+
+            print(
+                "SUCCESS: Password reset email sent using Resend."
+            )
+
+            print(
+                f"Resend response: {response_data}"
+            )
+
+            return
+
+        print("RESEND EMAIL ERROR")
+        print(
+            f"Status: {response.status_code}"
+        )
+        print(
+            f"Response: {response.text}"
+        )
+
+        raise RuntimeError(
+            "Resend email sending failed: "
+            + response.text
+        )
+
+    except requests.RequestException as error:
+
+        print("RESEND CONNECTION ERROR")
+        print(error)
+
+        raise RuntimeError(
+            f"Could not connect to Resend API: {error}"
+        )
+
+    except Exception as error:
+
+        print("EMAIL ERROR")
+        print(error)
+
+        raise RuntimeError(
+            f"Password reset email failed: {error}"
         )
 
 
@@ -1586,6 +1655,12 @@ def forgot_password():
 
         }), 400
 
+    print("")
+    print("========================================")
+    print("FORGOT PASSWORD REQUEST")
+    print(f"Email: {email}")
+    print("========================================")
+
     token = create_password_reset_token(
         email
     )
@@ -1604,16 +1679,18 @@ def forgot_password():
     if token:
 
         reset_url = (
-            RESET_URL
-            + (
-                "&"
-                if "?" in RESET_URL
-                else "?"
-            )
+            PUBLIC_BASE_URL
+            + RESET_PAGE
+            + "?"
             + urlencode({
                 "token": token
             })
         )
+
+        print("")
+        print("Generated reset URL:")
+        print(reset_url)
+        print("")
 
         try:
 
@@ -1623,15 +1700,23 @@ def forgot_password():
             )
 
             print(
-                f"Password reset email sent to {email}"
+                "PASSWORD RESET EMAIL SENT SUCCESSFULLY"
             )
 
         except Exception as error:
 
-            print(
-                "Password reset email error:",
-                error
-            )
+            print("")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("PASSWORD RESET EMAIL FAILED")
+            print(error)
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("")
+
+    else:
+
+        print(
+            "No user found for password reset request."
+        )
 
     return jsonify(
         response
