@@ -2,7 +2,7 @@ import json
 import os
 import secrets
 import smtplib
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from functools import wraps
@@ -1013,10 +1013,26 @@ def add_approval_history():
 
     history = load_approval_history()
 
+    # ========================================================
+    # INDIA STANDARD TIME
+    # UTC + 05:30
+    # ========================================================
+
+    ist_timezone = timezone(
+        timedelta(
+            hours=5,
+            minutes=30
+        )
+    )
+
+    current_ist_time = datetime.now(
+        ist_timezone
+    )
+
     record = {
 
         "id":
-            datetime.now().strftime(
+            current_ist_time.strftime(
                 "%Y%m%d%H%M%S%f"
             ),
 
@@ -1041,7 +1057,7 @@ def add_approval_history():
             ),
 
         "timestamp":
-            datetime.now().isoformat(
+            current_ist_time.isoformat(
                 timespec="seconds"
             )
     }
@@ -1147,8 +1163,17 @@ def update_approval_history(
         human_decision
     )
 
+    ist_timezone = timezone(
+        timedelta(
+            hours=5,
+            minutes=30
+        )
+    )
+
     target_record["updated_at"] = (
-        datetime.now().isoformat(
+        datetime.now(
+            ist_timezone
+        ).isoformat(
             timespec="seconds"
         )
     )
