@@ -1,10 +1,7 @@
 import json
 import os
 import secrets
-import smtplib
 from datetime import datetime, timezone, timedelta
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from functools import wraps
 from urllib.parse import urlencode
 
@@ -89,28 +86,6 @@ APPROVAL_HISTORY_FILE = os.path.join(
 # ============================================================
 # EMAIL CONFIGURATION
 # ============================================================
-
-GMAIL_SMTP_SERVER = os.environ.get(
-    "GMAIL_SMTP_SERVER",
-    "smtp.gmail.com"
-)
-
-GMAIL_SMTP_PORT = int(
-    os.environ.get(
-        "GMAIL_SMTP_PORT",
-        "587"
-    )
-)
-
-GMAIL_USERNAME = os.environ.get(
-    "GMAIL_USERNAME",
-    ""
-).strip()
-
-GMAIL_APP_PASSWORD = os.environ.get(
-    "GMAIL_APP_PASSWORD",
-    ""
-).strip().replace(" ", "")
 
 GMAIL_FROM_NAME = os.environ.get(
     "GMAIL_FROM_NAME",
@@ -409,7 +384,11 @@ GOOGLE_CLIENT_SECRET = os.environ.get(
     ""
 )
 
-GOOGLE_REDIRECT_URI = (
+# CHANGED FOR DEPLOYMENT:
+# Render will use GOOGLE_REDIRECT_URI from Environment Variables.
+# Local development will continue using 127.0.0.1.
+GOOGLE_REDIRECT_URI = os.environ.get(
+    "GOOGLE_REDIRECT_URI",
     "http://127.0.0.1:5000/auth/google/callback"
 )
 
