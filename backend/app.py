@@ -1601,8 +1601,8 @@ def google_callback():
     session["login_method"] = "google"
 
     return redirect(
-        "/index.html"
-    )
+    FRONTEND_URL + "/index.html"
+)
 
 
 # ============================================================
