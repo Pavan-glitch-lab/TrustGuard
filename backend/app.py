@@ -64,12 +64,7 @@ FRONTEND_URL = os.environ.get(
 CORS(
     app,
     resources={
-        r"/api/*": {
-            "origins": [FRONTEND_URL]
-        },
-        r"/auth/*": {
-            "origins": [FRONTEND_URL]
-        }
+        r"/*": {"origins": [FRONTEND_URL]}
     },
     supports_credentials=True
 )
