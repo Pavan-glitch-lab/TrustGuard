@@ -4,6 +4,8 @@
 ============================================================ */
 
 "use strict";
+const API_BASE_URL =
+    "https://trustguard-production.up.railway.app";
 
 
 /* ============================================================
@@ -20,14 +22,15 @@ let currentAnalysis = null;
 async function apiFetch(url, options = {}) {
 
     const defaultOptions = {
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    };
+    credentials: "include",
+    headers: {
+        "Content-Type": "application/json"
+    }
+};
 
-    const response = await fetch(
-        url,
+    const response =
+    await fetch(
+        API_BASE_URL + url,
         {
             ...defaultOptions,
             ...options,
@@ -2072,7 +2075,7 @@ function escapeHtml(
 function loginWithGoogle() {
 
     window.location.href =
-        "/auth/google";
+        API_BASE_URL + "/auth/google";
 }
 
 
