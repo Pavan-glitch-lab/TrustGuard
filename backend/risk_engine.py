@@ -213,17 +213,17 @@ def calculate_risk(action):
     # RISK CLASSIFICATION
     # =========================================================
     #
-    # 0 - 2  = LOW
-    # 3 - 8  = MEDIUM
-    # 9+     = HIGH
+    # 0 - 8  = LOW
+    # 9 - 16  = MEDIUM
+    # 17 - 25     = HIGH
     #
     # =========================================================
 
-    if total_score <= 2:
+    if total_score <= 8:
         risk_level = "Low"
         decision = "Autonomous Execution"
 
-    elif total_score <= 8:
+    elif total_score <= 16:
         risk_level = "Medium"
         decision = "User Confirmation"
 
