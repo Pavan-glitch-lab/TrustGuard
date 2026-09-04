@@ -50,6 +50,12 @@ app.secret_key = os.environ.get(
     "trustguard-development-secret-change-this"
 )
 
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="None"
+)
+
 FRONTEND_URL = os.environ.get(
     "FRONTEND_URL",
     "https://trustguard-1-fsvc.onrender.com"
