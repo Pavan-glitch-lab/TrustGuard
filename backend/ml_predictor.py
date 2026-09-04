@@ -23,7 +23,6 @@ MODEL_PATH = os.path.join(
 # ============================================================
 
 try:
-
     model = joblib.load(
         MODEL_PATH
     )
@@ -35,9 +34,7 @@ try:
     )
 
 except Exception as error:
-
     model = None
-
     MODEL_LOADED = False
 
     print(
@@ -80,43 +77,37 @@ def is_clearly_low_risk(action):
 
 
     # --------------------------------------------------------
-    # Simple communication actions
+    # Simple communication / reminder actions
     # --------------------------------------------------------
 
     low_risk_patterns = [
 
-        r"\bsend a reminder\b",
+        r"\bcreate a reminder\b",
+        r"\bcreates a reminder\b",
 
+        r"\bsend a reminder\b",
         r"\bsend reminder\b",
 
         r"\bsend an email\b",
-
         r"\bsend email\b",
 
         r"\bsend a notification\b",
-
         r"\bsend notification\b",
 
         r"\bsend a message\b",
-
         r"\bsend message\b",
 
         r"\bnotify the user\b",
-
         r"\bnotify a user\b",
 
         r"\bremind the user\b",
-
         r"\bremind a user\b",
 
         r"\bshow a notification\b",
-
         r"\bdisplay a notification\b",
 
         r"\bsend appointment reminder\b",
-
         r"\bsend a meeting reminder\b",
-
         r"\bsend a calendar reminder\b"
     ]
 
@@ -127,7 +118,6 @@ def is_clearly_low_risk(action):
             pattern,
             text
         ):
-
             return True
 
 
@@ -138,21 +128,17 @@ def is_clearly_low_risk(action):
     informational_patterns = [
 
         r"\bshow information\b",
-
         r"\bdisplay information\b",
 
         r"\bshow the user\b",
-
         r"\bdisplay the user\b",
 
         r"\bprovide information\b",
-
         r"\bprovide details\b",
 
         r"\bexplain\b",
 
         r"\bsummarize\b",
-
         r"\bsummarise\b"
     ]
 
@@ -163,7 +149,6 @@ def is_clearly_low_risk(action):
             pattern,
             text
         ):
-
             return True
 
 
@@ -186,37 +171,60 @@ def is_clearly_high_risk(action):
 
     high_risk_patterns = [
 
+        # ----------------------------------------------------
         # Financial
+        # ----------------------------------------------------
+
         r"\btransfer\s+\$?\d+",
+        r"\btransfer\s+₹?\d+",
+
         r"\btransfer money\b",
         r"\btransfer funds\b",
         r"\bmove money\b",
+
         r"\bwithdraw money\b",
+
         r"\bmake a payment\b",
         r"\bmake payment\b",
+
         r"\bapprove a loan\b",
         r"\bapprove loan\b",
 
-        # Account/security
+
+        # ----------------------------------------------------
+        # Account / security
+        # ----------------------------------------------------
+
         r"\bdelete the account\b",
         r"\bdelete an account\b",
         r"\bdelete user account\b",
+
         r"\bdisable security\b",
         r"\bdisable authentication\b",
         r"\bdisable 2fa\b",
         r"\bdisable two-factor\b",
 
+
+        # ----------------------------------------------------
         # Irreversible actions
+        # ----------------------------------------------------
+
         r"\bpermanently delete\b",
         r"\bpermanently remove\b",
         r"\bdelete permanently\b",
 
-        # External/high-impact actions
+
+        # ----------------------------------------------------
+        # External / high-impact actions
+        # ----------------------------------------------------
+
         r"\bterminate employment\b",
         r"\bfire the employee\b",
         r"\bfire an employee\b",
+
         r"\bdeny insurance\b",
         r"\bdeny a claim\b",
+
         r"\bapprove surgery\b",
         r"\bprescribe medication\b",
         r"\bdiagnose the patient\b"
@@ -229,7 +237,6 @@ def is_clearly_high_risk(action):
             pattern,
             text
         ):
-
             return True
 
 
@@ -243,7 +250,6 @@ def is_clearly_high_risk(action):
 def get_model_prediction(action):
 
     if not MODEL_LOADED:
-
         return "Medium"
 
 
@@ -266,17 +272,14 @@ def get_model_prediction(action):
 
 
         if "high" in normalized:
-
             return "High"
 
 
         if "medium" in normalized:
-
             return "Medium"
 
 
         if "low" in normalized:
-
             return "Low"
 
 
@@ -313,9 +316,11 @@ def predict_risk(action):
         High
 
     The predictor keeps the trained ML model,
+
     while protecting clearly obvious low-risk and
     high-risk actions from unreasonable model output.
     """
+
 
     action = str(
         action or ""
@@ -327,7 +332,6 @@ def predict_risk(action):
     # --------------------------------------------------------
 
     if not action:
-
         return "Low"
 
 
@@ -340,7 +344,6 @@ def predict_risk(action):
     if is_clearly_high_risk(
         action
     ):
-
         return "High"
 
 
@@ -349,7 +352,9 @@ def predict_risk(action):
     #
     # Prevents simple actions such as:
     #
-    # "Send a reminder email..."
+    # "Create a reminder..."
+    # "Send a reminder..."
+    # "Explain..."
     #
     # from being incorrectly classified as High
     # by the trained model.
@@ -358,7 +363,6 @@ def predict_risk(action):
     if is_clearly_low_risk(
         action
     ):
-
         return "Low"
 
 
