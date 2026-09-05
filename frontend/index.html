@@ -1555,7 +1555,33 @@
     border: 1px solid rgba(32, 217, 255, .12);
     animation: scanSequenceIn .35s ease;
 }
+.scan-sequence {
+    animation:
+        scanSequenceIn .35s ease,
+        rgbScanBorder 3s linear infinite;
+}
 
+@keyframes rgbScanBorder {
+    0% {
+        border-color: rgba(0,255,255,.45);
+        box-shadow: 0 0 12px rgba(0,255,255,.15);
+    }
+
+    33% {
+        border-color: rgba(255,0,255,.45);
+        box-shadow: 0 0 15px rgba(255,0,255,.15);
+    }
+
+    66% {
+        border-color: rgba(0,255,120,.45);
+        box-shadow: 0 0 15px rgba(0,255,120,.15);
+    }
+
+    100% {
+        border-color: rgba(0,255,255,.45);
+        box-shadow: 0 0 12px rgba(0,255,255,.15);
+    }
+}
 .scan-status {
     display: flex;
     align-items: center;
