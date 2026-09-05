@@ -1,1871 +1,2540 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+```
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <title>TrustGuard — AI Safety Dashboard</title>
+<title>TrustGuard AI — Risk Oversight Dashboard</title>
 
-    <link
-        rel="stylesheet"
-        href="/style.css"
-    >
+<link
+    rel="stylesheet"
+    href="/style.css"
+>
 
-    <style>
-        /* =====================================================
-           TRUSTGUARD MODERN DASHBOARD
-        ===================================================== */
+<style>
+    /* =====================================================
+       TRUSTGUARD AI — PROFESSIONAL SECURITY DASHBOARD
+       UI ONLY — EXISTING JAVASCRIPT IDs PRESERVED
+    ===================================================== */
 
-        * {
-            box-sizing: border-box;
+    :root {
+        --bg: #f4f7fb;
+        --surface: #ffffff;
+        --surface-soft: #f8fafc;
+        --border: #e5eaf1;
+        --text: #172033;
+        --muted: #6b7280;
+        --muted-light: #94a3b8;
+
+        --primary: #4f46e5;
+        --primary-dark: #3730a3;
+        --cyan: #0891b2;
+
+        --low: #059669;
+        --medium: #d97706;
+        --high: #dc2626;
+
+        --shadow-sm:
+            0 4px 14px rgba(15, 23, 42, 0.04);
+
+        --shadow-md:
+            0 12px 30px rgba(15, 23, 42, 0.07);
+
+        --shadow-lg:
+            0 20px 45px rgba(15, 23, 42, 0.10);
+
+        --radius: 18px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+
+        font-family:
+            Inter,
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
+
+        background:
+            radial-gradient(
+                circle at 5% 5%,
+                rgba(79, 70, 229, 0.08),
+                transparent 25%
+            ),
+            radial-gradient(
+                circle at 95% 10%,
+                rgba(8, 145, 178, 0.07),
+                transparent 24%
+            ),
+            var(--bg);
+
+        color: var(--text);
+    }
+
+    button,
+    textarea,
+    input {
+        font: inherit;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    /* =====================================================
+       APP SHELL
+    ===================================================== */
+
+    .app-shell {
+        min-height: 100vh;
+        display: flex;
+    }
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .sidebar {
+        width: 255px;
+        min-height: 100vh;
+
+        padding: 22px 15px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #0f172a 0%,
+                #111827 55%,
+                #172554 100%
+            );
+
+        color: white;
+
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        z-index: 20;
+
+        box-shadow:
+            8px 0 30px rgba(15, 23, 42, 0.10);
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        padding: 8px 12px 30px;
+    }
+
+    .brand-icon {
+        width: 44px;
+        height: 44px;
+
+        border-radius: 13px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background:
+            linear-gradient(
+                135deg,
+                #6366f1,
+                #06b6d4
+            );
+
+        font-size: 21px;
+
+        box-shadow:
+            0 10px 28px rgba(99, 102, 241, 0.30);
+    }
+
+    .brand-name {
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+    .brand-subtitle {
+        color: #94a3b8;
+        font-size: 10px;
+        margin-top: 3px;
+    }
+
+    .nav-title {
+        color: #64748b;
+
+        font-size: 9px;
+        font-weight: 700;
+
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+
+        padding: 13px 12px 8px;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        width: 100%;
+
+        padding: 12px;
+
+        margin-bottom: 5px;
+
+        color: #cbd5e1;
+
+        border-radius: 11px;
+
+        text-decoration: none;
+
+        border: 1px solid transparent;
+
+        background: transparent;
+
+        text-align: left;
+
+        transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .nav-item:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.07);
+        transform: translateX(2px);
+    }
+
+    .nav-item.active {
+        color: white;
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(99, 102, 241, 0.24),
+                rgba(99, 102, 241, 0.08)
+            );
+
+        border-color:
+            rgba(129, 140, 248, 0.15);
+    }
+
+    .nav-icon {
+        width: 23px;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .sidebar-bottom {
+        position: absolute;
+
+        bottom: 22px;
+        left: 15px;
+        right: 15px;
+    }
+
+    .security-status {
+        padding: 15px;
+
+        border-radius: 13px;
+
+        background:
+            rgba(16, 185, 129, 0.08);
+
+        border:
+            1px solid rgba(16, 185, 129, 0.18);
+    }
+
+    .status-dot {
+        display: inline-block;
+
+        width: 8px;
+        height: 8px;
+
+        background: #10b981;
+
+        border-radius: 50%;
+
+        margin-right: 7px;
+
+        box-shadow:
+            0 0 10px rgba(16, 185, 129, 0.8);
+    }
+
+    .security-status strong {
+        font-size: 11px;
+    }
+
+    .security-status p {
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        line-height: 1.5;
+
+        margin: 7px 0 0;
+    }
+
+    /* =====================================================
+       MAIN CONTENT
+    ===================================================== */
+
+    .main-content {
+        width: calc(100% - 255px);
+
+        margin-left: 255px;
+
+        padding:
+            28px
+            34px
+            55px;
+    }
+
+    /* =====================================================
+       TOPBAR
+    ===================================================== */
+
+    .topbar {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 25px;
+    }
+
+    .page-title h1 {
+        margin: 0;
+
+        font-size: 28px;
+        font-weight: 800;
+
+        letter-spacing: -0.9px;
+    }
+
+    .page-title p {
+        margin: 6px 0 0;
+
+        color: var(--muted);
+
+        font-size: 13px;
+    }
+
+    .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .notification {
+        width: 41px;
+        height: 41px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 11px;
+
+        background: white;
+
+        position: relative;
+
+        box-shadow: var(--shadow-sm);
+
+        transition: 0.2s ease;
+    }
+
+    .notification:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .notification-dot {
+        position: absolute;
+
+        right: 8px;
+        top: 7px;
+
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+
+        background: #ef4444;
+
+        border: 2px solid white;
+    }
+
+    .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        padding: 5px 8px 5px 6px;
+
+        background: white;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 13px;
+
+        box-shadow: var(--shadow-sm);
+    }
+
+    .avatar {
+        width: 35px;
+        height: 35px;
+
+        border-radius: 10px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: white;
+
+        font-weight: 800;
+        font-size: 11px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed
+            );
+    }
+
+    .user-info strong {
+        display: block;
+
+        font-size: 11px;
+    }
+
+    .user-info span {
+        color: var(--muted-light);
+        font-size: 9px;
+    }
+
+    .logout-btn {
+        margin-left: 5px;
+
+        border: none;
+
+        background: transparent;
+
+        color: #64748b;
+
+        font-size: 10px;
+        font-weight: 600;
+
+        padding: 7px;
+    }
+
+    .logout-btn:hover {
+        color: var(--high);
+    }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+        position: relative;
+
+        overflow: hidden;
+
+        padding: 31px;
+
+        border-radius: 21px;
+
+        color: white;
+
+        background:
+            radial-gradient(
+                circle at 88% 25%,
+                rgba(255,255,255,0.16),
+                transparent 24%
+            ),
+            radial-gradient(
+                circle at 72% 100%,
+                rgba(6,182,212,0.15),
+                transparent 30%
+            ),
+            linear-gradient(
+                135deg,
+                #111827 0%,
+                #312e81 54%,
+                #164e63 100%
+            );
+
+        box-shadow: var(--shadow-lg);
+
+        margin-bottom: 23px;
+    }
+
+    .hero-content {
+        max-width: 690px;
+
+        position: relative;
+
+        z-index: 2;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+
+        align-items: center;
+        gap: 7px;
+
+        padding: 6px 10px;
+
+        border-radius: 20px;
+
+        background:
+            rgba(255,255,255,0.09);
+
+        border:
+            1px solid rgba(255,255,255,0.12);
+
+        font-size: 10px;
+        font-weight: 600;
+
+        margin-bottom: 13px;
+    }
+
+    .hero-badge span {
+        color: #34d399;
+    }
+
+    .hero h2 {
+        margin: 0;
+
+        font-size: 27px;
+        line-height: 1.2;
+
+        letter-spacing: -0.8px;
+    }
+
+    .hero p {
+        margin: 11px 0 0;
+
+        max-width: 640px;
+
+        color: #dbe3f2;
+
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .hero-shield {
+        position: absolute;
+
+        right: 65px;
+        top: 20px;
+
+        font-size: 135px;
+
+        opacity: 0.08;
+
+        transform: rotate(8deg);
+    }
+
+    /* =====================================================
+       STAT CARDS
+    ===================================================== */
+
+    .stats-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+        gap: 15px;
+
+        margin-bottom: 23px;
+    }
+
+    .stat-card {
+        position: relative;
+
+        padding: 18px;
+
+        border-radius: 16px;
+
+        background: white;
+
+        border:
+            1px solid var(--border);
+
+        box-shadow: var(--shadow-sm);
+
+        overflow: hidden;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .stat-card::after {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        bottom: 0;
+
+        width: 100%;
+        height: 3px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #4f46e5,
+                #06b6d4
+            );
+
+        opacity: 0.65;
+    }
+
+    .stat-card:nth-child(2)::after {
+        background: #10b981;
+    }
+
+    .stat-card:nth-child(3)::after {
+        background: #f59e0b;
+    }
+
+    .stat-card:nth-child(4)::after {
+        background: #ef4444;
+    }
+
+    .stat-top {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .stat-label {
+        color: #64748b;
+
+        font-size: 9px;
+        font-weight: 800;
+
+        letter-spacing: 0.8px;
+    }
+
+    .stat-icon {
+        width: 33px;
+        height: 33px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: #f1f5f9;
+
+        font-size: 13px;
+    }
+
+    .stat-value {
+        font-size: 28px;
+        font-weight: 850;
+
+        margin-top: 9px;
+
+        letter-spacing: -0.7px;
+    }
+
+    .stat-description {
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        margin-top: 4px;
+    }
+
+    /* =====================================================
+       DASHBOARD GRID
+    ===================================================== */
+
+    .dashboard-grid {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1.55fr)
+            minmax(300px, 0.85fr);
+
+        gap: 20px;
+    }
+
+    /* =====================================================
+       PANELS
+    ===================================================== */
+
+    .panel {
+        background: white;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: var(--radius);
+
+        box-shadow: var(--shadow-sm);
+
+        padding: 21px;
+
+        margin-bottom: 20px;
+    }
+
+    .panel-header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 16px;
+    }
+
+    .panel-title {
+        margin: 0;
+
+        font-size: 14px;
+        font-weight: 800;
+
+        letter-spacing: -0.2px;
+    }
+
+    .panel-subtitle {
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        margin-top: 4px;
+    }
+
+    /* =====================================================
+       ANALYZER
+    ===================================================== */
+
+    .action-input {
+        width: 100%;
+
+        min-height: 125px;
+
+        resize: vertical;
+
+        border:
+            1px solid #dbe2ea;
+
+        border-radius: 13px;
+
+        padding: 15px;
+
+        outline: none;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+
+        color: #263044;
+
+        background: #fbfcfe;
+
+        transition:
+            border 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .action-input::placeholder {
+        color: #a0a9b8;
+    }
+
+    .action-input:focus {
+        border-color: #6366f1;
+
+        box-shadow:
+            0 0 0 4px
+            rgba(99, 102, 241, 0.09);
+
+        background: white;
+    }
+
+    .analyze-row {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 15px;
+
+        margin-top: 12px;
+    }
+
+    .input-hint {
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        line-height: 1.5;
+    }
+
+    .primary-btn {
+        border: none;
+
+        padding: 11px 18px;
+
+        border-radius: 10px;
+
+        color: white;
+
+        font-weight: 750;
+        font-size: 11px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #6366f1,
+                #4f46e5
+            );
+
+        box-shadow:
+            0 8px 20px
+            rgba(79, 70, 229, 0.22);
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .primary-btn:hover {
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 10px 24px
+            rgba(79, 70, 229, 0.28);
+    }
+
+    .primary-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    /* =====================================================
+       RESULT CARD
+    ===================================================== */
+
+    .result-card {
+        margin-top: 18px;
+
+        padding: 16px;
+
+        border-radius: 14px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #f8fafc,
+                #f5f7fb
+            );
+
+        border:
+            1px solid #e3e8ef;
+    }
+
+    .result-top {
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+        gap: 9px;
+    }
+
+    .result-metric {
+        padding: 12px;
+
+        border-radius: 11px;
+
+        background: white;
+
+        border:
+            1px solid #e6eaf0;
+
+        box-shadow:
+            0 2px 7px
+            rgba(15, 23, 42, 0.025);
+    }
+
+    .result-metric span {
+        display: block;
+
+        color: #8b95a5;
+
+        font-size: 8px;
+        font-weight: 700;
+
+        margin-bottom: 6px;
+
+        letter-spacing: 0.4px;
+    }
+
+    .result-metric strong {
+        font-size: 13px;
+    }
+
+    /* =====================================================
+       RISK LEVEL VISUAL STATES
+    ===================================================== */
+
+    #riskLevel {
+        color: var(--primary);
+    }
+
+    #decision {
+        color: #475569;
+    }
+
+    #mlPrediction {
+        color: #7c3aed;
+    }
+
+    #riskScore {
+        color: #0f172a;
+    }
+
+    .result-details {
+        margin-top: 14px;
+    }
+
+    .result-details h4 {
+        margin: 0 0 8px;
+
+        font-size: 10px;
+        font-weight: 800;
+    }
+
+    .result-details ul {
+        margin: 0;
+
+        padding-left: 18px;
+
+        color: #687184;
+
+        font-size: 10px;
+
+        line-height: 1.8;
+    }
+
+    .hybrid-box {
+        margin-top: 12px;
+
+        padding: 12px;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eef2ff,
+                #ecfeff
+            );
+
+        border:
+            1px solid #dfe5ff;
+
+        color: #373c67;
+
+        font-size: 10px;
+
+        line-height: 1.5;
+    }
+
+    /* =====================================================
+       APPROVAL / CONFIRMATION
+    ===================================================== */
+
+    .interaction-panel {
+        padding: 15px;
+
+        border-radius: 12px;
+
+        margin-top: 14px;
+
+        border:
+            1px solid #f1dfb0;
+
+        background:
+            linear-gradient(
+                135deg,
+                #fffbeb,
+                #fff7ed
+            );
+    }
+
+    .interaction-panel h3 {
+        margin: 0 0 5px;
+
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .interaction-panel p {
+        margin: 0 0 12px;
+
+        color: #7c6a37;
+
+        font-size: 10px;
+
+        line-height: 1.5;
+    }
+
+    .approval-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .approve-btn,
+    .confirm-btn {
+        border: none;
+
+        border-radius: 8px;
+
+        padding: 9px 14px;
+
+        color: white;
+
+        background: #059669;
+
+        font-size: 10px;
+        font-weight: 750;
+
+        transition: 0.2s ease;
+    }
+
+    .approve-btn:hover,
+    .confirm-btn:hover {
+        background: #047857;
+        transform: translateY(-1px);
+    }
+
+    .reject-btn,
+    .cancel-btn {
+        border: none;
+
+        border-radius: 8px;
+
+        padding: 9px 14px;
+
+        color: white;
+
+        background: #dc2626;
+
+        font-size: 10px;
+        font-weight: 750;
+
+        transition: 0.2s ease;
+    }
+
+    .reject-btn:hover,
+    .cancel-btn:hover {
+        background: #b91c1c;
+        transform: translateY(-1px);
+    }
+
+    .interaction-status {
+        margin-top: 10px;
+
+        font-size: 10px;
+        font-weight: 750;
+    }
+
+    /* =====================================================
+       RISK INTELLIGENCE
+    ===================================================== */
+
+    .risk-visual {
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 8px 0 20px;
+    }
+
+    .risk-ring {
+        width: 155px;
+        height: 155px;
+
+        border-radius: 50%;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        background:
+            conic-gradient(
+                #6366f1 0deg,
+                #8b5cf6 105deg,
+                #06b6d4 220deg,
+                #e2e8f0 220deg
+            );
+
+        position: relative;
+
+        box-shadow:
+            0 12px 30px
+            rgba(79, 70, 229, 0.12);
+    }
+
+    .risk-ring::after {
+        content: "";
+
+        width: 121px;
+        height: 121px;
+
+        border-radius: 50%;
+
+        background: white;
+
+        position: absolute;
+    }
+
+    .risk-ring-content {
+        position: relative;
+
+        z-index: 2;
+
+        text-align: center;
+    }
+
+    .risk-ring-content strong {
+        display: block;
+
+        font-size: 25px;
+
+        letter-spacing: -0.5px;
+    }
+
+    .risk-ring-content span {
+        color: #8b93a3;
+
+        font-size: 8px;
+
+        font-weight: 700;
+
+        letter-spacing: 1px;
+    }
+
+    /* =====================================================
+       SECURITY LAYERS
+    ===================================================== */
+
+    .security-layer {
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+
+        padding: 10px 0;
+
+        border-bottom:
+            1px solid #eef1f5;
+    }
+
+    .security-layer:last-child {
+        border-bottom: none;
+    }
+
+    .layer-icon {
+        width: 32px;
+        height: 32px;
+
+        flex-shrink: 0;
+
+        border-radius: 9px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        background: #f1f5f9;
+
+        font-size: 13px;
+    }
+
+    .layer-info {
+        flex: 1;
+    }
+
+    .layer-info strong {
+        display: block;
+
+        font-size: 10px;
+        font-weight: 750;
+    }
+
+    .layer-info span {
+        display: block;
+
+        color: #94a3b8;
+
+        font-size: 8px;
+
+        margin-top: 2px;
+    }
+
+    .layer-status {
+        color: #059669;
+
+        font-size: 8px;
+
+        font-weight: 800;
+
+        letter-spacing: 0.4px;
+    }
+
+    /* =====================================================
+       HISTORY
+    ===================================================== */
+
+    .history-toolbar {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        gap: 15px;
+
+        margin-bottom: 12px;
+    }
+
+    .clear-history-btn {
+        border:
+            1px solid #e1e6ed;
+
+        background: white;
+
+        color: #64748b;
+
+        border-radius: 8px;
+
+        padding: 7px 10px;
+
+        font-size: 9px;
+        font-weight: 650;
+
+        transition: 0.2s ease;
+    }
+
+    .clear-history-btn:hover {
+        color: #dc2626;
+
+        border-color:
+            #fecaca;
+
+        background: #fffafa;
+    }
+
+    .history-item {
+        padding: 14px;
+
+        border-radius: 12px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #fafbfc,
+                #f8fafc
+            );
+
+        border:
+            1px solid #e8edf2;
+
+        margin-bottom: 9px;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .history-item:hover {
+        transform: translateX(2px);
+
+        box-shadow:
+            0 5px 15px
+            rgba(15, 23, 42, 0.04);
+    }
+
+    .history-item h3 {
+        margin: 0 0 5px;
+
+        font-size: 9px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.6px;
+    }
+
+    .history-item p {
+        margin: 3px 0;
+
+        font-size: 10px;
+
+        color: #687184;
+
+        line-height: 1.5;
+    }
+
+    .history-item small {
+        display: block;
+
+        margin-top: 7px;
+
+        color: #9aa1af;
+
+        font-size: 8px;
+    }
+
+    .empty-history {
+        color: #939aa9;
+
+        text-align: center;
+
+        padding: 22px;
+
+        font-size: 10px;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 1150px) {
+
+        .stats-grid {
+            grid-template-columns:
+                repeat(2, 1fr);
         }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family:
-                Inter,
-                ui-sans-serif,
-                system-ui,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                sans-serif;
-            background:
-                radial-gradient(
-                    circle at 10% 10%,
-                    rgba(99, 102, 241, 0.14),
-                    transparent 28%
-                ),
-                radial-gradient(
-                    circle at 90% 20%,
-                    rgba(14, 165, 233, 0.12),
-                    transparent 25%
-                ),
-                #f6f7fb;
-            color: #172033;
+        .dashboard-grid {
+            grid-template-columns: 1fr;
         }
+    }
 
-        button,
-        textarea,
-        input {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        .app-shell {
-            min-height: 100vh;
-            display: flex;
-        }
-
-        /* SIDEBAR */
+    @media (max-width: 800px) {
 
         .sidebar {
-            width: 250px;
-            min-height: 100vh;
-            padding: 24px 16px;
-            background:
-                linear-gradient(
-                    180deg,
-                    #111827 0%,
-                    #171d31 100%
-                );
-            color: white;
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            z-index: 10;
+            display: none;
         }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 12px 28px;
-        }
-
-        .brand-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background:
-                linear-gradient(
-                    135deg,
-                    #6366f1,
-                    #06b6d4
-                );
-            font-size: 21px;
-            box-shadow:
-                0 8px 25px
-                rgba(99, 102, 241, 0.35);
-        }
-
-        .brand-name {
-            font-size: 19px;
-            font-weight: 800;
-            letter-spacing: -0.4px;
-        }
-
-        .brand-subtitle {
-            color: #9ca3af;
-            font-size: 11px;
-            margin-top: 2px;
-        }
-
-        .nav-title {
-            color: #6b7280;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            padding: 12px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 5px;
-            color: #c7cad5;
-            border-radius: 10px;
-            text-decoration: none;
-            border: none;
-            background: transparent;
-            text-align: left;
-            transition: 0.2s ease;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            color: white;
-            background: rgba(255, 255, 255, 0.09);
-        }
-
-        .nav-icon {
-            width: 22px;
-            text-align: center;
-        }
-
-        .sidebar-bottom {
-            position: absolute;
-            bottom: 22px;
-            left: 16px;
-            right: 16px;
-        }
-
-        .security-status {
-            padding: 14px;
-            border-radius: 12px;
-            background: rgba(16, 185, 129, 0.09);
-            border: 1px solid rgba(16, 185, 129, 0.18);
-            margin-bottom: 12px;
-        }
-
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #10b981;
-            border-radius: 50%;
-            margin-right: 6px;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
-        }
-
-        .security-status strong {
-            font-size: 12px;
-        }
-
-        .security-status p {
-            color: #9ca3af;
-            font-size: 10px;
-            margin: 7px 0 0;
-        }
-
-        /* MAIN */
 
         .main-content {
-            width: calc(100% - 250px);
-            margin-left: 250px;
-            padding: 25px 32px 45px;
+            width: 100%;
+
+            margin-left: 0;
+
+            padding:
+                18px
+                16px
+                35px;
         }
 
         .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
+            align-items: flex-start;
         }
 
         .page-title h1 {
-            margin: 0;
-            font-size: 28px;
-            letter-spacing: -0.8px;
+            font-size: 23px;
         }
 
         .page-title p {
-            margin: 6px 0 0;
-            color: #697386;
-            font-size: 14px;
+            font-size: 11px;
         }
-
-        .topbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .notification {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #e4e7ee;
-            border-radius: 10px;
-            background: white;
-            position: relative;
-        }
-
-        .notification-dot {
-            position: absolute;
-            right: 8px;
-            top: 7px;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #ef4444;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 10px;
-            background: white;
-            border: 1px solid #e4e7ee;
-            border-radius: 12px;
-        }
-
-        .avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            background:
-                linear-gradient(
-                    135deg,
-                    #6366f1,
-                    #8b5cf6
-                );
-        }
-
-        .user-info strong {
-            display: block;
-            font-size: 12px;
-        }
-
-        .user-info span {
-            color: #8a93a5;
-            font-size: 10px;
-        }
-
-        .logout-btn {
-            margin-left: 6px;
-            border: none;
-            background: transparent;
-            color: #6b7280;
-            font-size: 12px;
-        }
-
-        .logout-btn:hover {
-            color: #ef4444;
-        }
-
-        /* HERO */
 
         .hero {
-            position: relative;
-            overflow: hidden;
-            padding: 28px;
-            border-radius: 20px;
-            color: white;
-            background:
-                radial-gradient(
-                    circle at 85% 30%,
-                    rgba(255,255,255,0.17),
-                    transparent 25%
-                ),
-                linear-gradient(
-                    135deg,
-                    #1e1b4b,
-                    #312e81 55%,
-                    #164e63
-                );
-            box-shadow:
-                0 18px 45px
-                rgba(49, 46, 129, 0.18);
-            margin-bottom: 22px;
-        }
-
-        .hero-content {
-            max-width: 650px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 6px 10px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.10);
-            border: 1px solid rgba(255,255,255,0.12);
-            font-size: 11px;
-            margin-bottom: 12px;
+            padding: 24px;
         }
 
         .hero h2 {
-            margin: 0;
-            font-size: 25px;
-            letter-spacing: -0.6px;
-        }
-
-        .hero p {
-            margin: 9px 0 20px;
-            color: #d7daf0;
-            font-size: 13px;
-            line-height: 1.6;
+            font-size: 22px;
         }
 
         .hero-shield {
-            position: absolute;
-            right: 60px;
+            right: -5px;
             top: 35px;
-            font-size: 115px;
-            opacity: 0.10;
-            transform: rotate(8deg);
+            font-size: 85px;
         }
 
-        /* STATS */
+        .user-info {
+            display: none;
+        }
 
         .stats-grid {
-            display: grid;
             grid-template-columns:
-                repeat(4, minmax(0, 1fr));
-            gap: 15px;
-            margin-bottom: 22px;
-        }
-
-        .stat-card {
-            padding: 18px;
-            border-radius: 15px;
-            background: white;
-            border: 1px solid #e8eaf0;
-            box-shadow:
-                0 5px 20px
-                rgba(25, 32, 56, 0.04);
-        }
-
-        .stat-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .stat-label {
-            color: #737d90;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .stat-icon {
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 9px;
-            background: #f3f4f6;
-        }
-
-        .stat-value {
-            font-size: 27px;
-            font-weight: 800;
-            margin-top: 9px;
-        }
-
-        .stat-description {
-            color: #9aa1af;
-            font-size: 10px;
-            margin-top: 4px;
-        }
-
-        /* GRID */
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.85fr);
-            gap: 20px;
-        }
-
-        .panel {
-            background: white;
-            border: 1px solid #e8eaf0;
-            border-radius: 17px;
-            box-shadow:
-                0 5px 20px
-                rgba(25, 32, 56, 0.04);
-            padding: 21px;
-            margin-bottom: 20px;
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .panel-title {
-            margin: 0;
-            font-size: 15px;
-            font-weight: 750;
-        }
-
-        .panel-subtitle {
-            color: #8991a1;
-            font-size: 10px;
-            margin-top: 4px;
-        }
-
-        /* ANALYZER */
-
-        .action-input {
-            width: 100%;
-            min-height: 120px;
-            resize: vertical;
-            border: 1px solid #dfe3eb;
-            border-radius: 12px;
-            padding: 14px;
-            outline: none;
-            font-size: 13px;
-            color: #263044;
-            background: #fbfcfe;
-        }
-
-        .action-input:focus {
-            border-color: #6366f1;
-            box-shadow:
-                0 0 0 3px
-                rgba(99, 102, 241, 0.10);
-        }
-
-        .analyze-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-        }
-
-        .input-hint {
-            color: #9299a8;
-            font-size: 10px;
-        }
-
-        .primary-btn {
-            border: none;
-            padding: 11px 18px;
-            border-radius: 9px;
-            color: white;
-            font-weight: 700;
-            font-size: 12px;
-            background:
-                linear-gradient(
-                    135deg,
-                    #6366f1,
-                    #4f46e5
-                );
-            box-shadow:
-                0 7px 18px
-                rgba(79, 70, 229, 0.20);
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .primary-btn:disabled {
-            opacity: 0.55;
-            cursor: not-allowed;
-        }
-
-        /* RESULT */
-
-        .result-card {
-            margin-top: 18px;
-            padding: 16px;
-            border-radius: 13px;
-            background: #f8f9fc;
-            border: 1px solid #e6e9f0;
+                repeat(2, 1fr);
         }
 
         .result-top {
-            display: grid;
             grid-template-columns:
-                repeat(4, minmax(0, 1fr));
-            gap: 10px;
+                repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 520px) {
+
+        .topbar-actions {
+            gap: 6px;
         }
 
-        .result-metric {
-            padding: 12px;
-            border-radius: 10px;
-            background: white;
-            border: 1px solid #e9ebf0;
+        .notification {
+            width: 36px;
+            height: 36px;
         }
 
-        .result-metric span {
-            display: block;
-            color: #8b93a3;
+        .user-menu {
+            padding-right: 4px;
+        }
+
+        .logout-btn {
             font-size: 9px;
-            margin-bottom: 5px;
         }
 
-        .result-metric strong {
-            font-size: 14px;
+        .stats-grid {
+            grid-template-columns: 1fr;
         }
 
-        .result-details {
-            margin-top: 14px;
+        .analyze-row {
+            align-items: stretch;
+
+            flex-direction: column;
         }
 
-        .result-details h4 {
-            margin: 0 0 8px;
-            font-size: 11px;
+        .primary-btn {
+            width: 100%;
         }
 
-        .result-details ul {
-            margin: 0;
-            padding-left: 18px;
-            color: #687184;
-            font-size: 11px;
-            line-height: 1.8;
-        }
-
-        .hybrid-box {
-            margin-top: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            background: #eef2ff;
-            color: #373c67;
-            font-size: 11px;
-            line-height: 1.5;
-        }
-
-        /* APPROVAL */
-
-        .interaction-panel {
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 14px;
-            border: 1px solid #f1dfb0;
-            background: #fffbeb;
-        }
-
-        .interaction-panel h3 {
-            margin: 0 0 5px;
-            font-size: 13px;
-        }
-
-        .interaction-panel p {
-            margin: 0 0 12px;
-            color: #7c6a37;
-            font-size: 11px;
+        .result-top {
+            grid-template-columns: 1fr;
         }
 
         .approval-buttons {
-            display: flex;
-            gap: 8px;
+            flex-direction: column;
         }
 
         .approve-btn,
-        .confirm-btn {
-            border: none;
-            border-radius: 8px;
-            padding: 9px 14px;
-            color: white;
-            background: #10b981;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
+        .confirm-btn,
         .reject-btn,
         .cancel-btn {
-            border: none;
-            border-radius: 8px;
-            padding: 9px 14px;
-            color: white;
-            background: #ef4444;
-            font-size: 11px;
-            font-weight: 700;
+            width: 100%;
         }
-
-        .interaction-status {
-            margin-top: 10px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        /* RISK VISUAL */
-
-        .risk-visual {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 0 20px;
-        }
-
-        .risk-ring {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background:
-                conic-gradient(
-                    #6366f1 0deg,
-                    #8b5cf6 115deg,
-                    #06b6d4 220deg,
-                    #e5e7eb 220deg
-                );
-            position: relative;
-        }
-
-        .risk-ring::after {
-            content: "";
-            width: 118px;
-            height: 118px;
-            border-radius: 50%;
-            background: white;
-            position: absolute;
-        }
-
-        .risk-ring-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }
-
-        .risk-ring-content strong {
-            display: block;
-            font-size: 24px;
-        }
-
-        .risk-ring-content span {
-            color: #8b93a3;
-            font-size: 9px;
-        }
-
-        /* SECURITY LAYERS */
-
-        .security-layer {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 10px 0;
-            border-bottom: 1px solid #eef0f4;
-        }
-
-        .security-layer:last-child {
-            border-bottom: none;
-        }
-
-        .layer-icon {
-            width: 31px;
-            height: 31px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f3f4f6;
-        }
-
-        .layer-info {
-            flex: 1;
-        }
-
-        .layer-info strong {
-            display: block;
-            font-size: 11px;
-        }
-
-        .layer-info span {
-            display: block;
-            color: #969eac;
-            font-size: 9px;
-            margin-top: 2px;
-        }
-
-        .layer-status {
-            color: #10b981;
-            font-size: 9px;
-            font-weight: 700;
-        }
-
-        /* HISTORY */
 
         .history-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+            align-items: flex-start;
+
+            flex-direction: column;
         }
 
         .clear-history-btn {
-            border: 1px solid #e1e4eb;
-            background: white;
-            color: #697386;
-            border-radius: 7px;
-            padding: 7px 10px;
-            font-size: 10px;
+            width: 100%;
         }
+    }
+</style>
+```
 
-        .clear-history-btn:hover {
-            color: #ef4444;
-            border-color: #fecaca;
-        }
-
-        .history-item {
-            padding: 13px;
-            border-radius: 11px;
-            background: #fafbfc;
-            border: 1px solid #edf0f4;
-            margin-bottom: 9px;
-        }
-
-        .history-item h3 {
-            margin: 0 0 5px;
-            font-size: 10px;
-            text-transform: uppercase;
-        }
-
-        .history-item p {
-            margin: 3px 0;
-            font-size: 11px;
-            color: #687184;
-        }
-
-        .history-item small {
-            display: block;
-            margin-top: 6px;
-            color: #9aa1af;
-            font-size: 9px;
-        }
-
-        .empty-history {
-            color: #939aa9;
-            text-align: center;
-            padding: 20px;
-            font-size: 11px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* RESPONSIVE */
-
-        @media (max-width: 1100px) {
-
-            .stats-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 760px) {
-
-            .sidebar {
-                display: none;
-            }
-
-            .main-content {
-                width: 100%;
-                margin-left: 0;
-                padding: 18px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .result-top {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
-            .topbar {
-                align-items: flex-start;
-            }
-
-            .user-info {
-                display: none;
-            }
-
-            .hero-shield {
-                right: 10px;
-                font-size: 80px;
-            }
-        }
-    </style>
 </head>
-
 
 <body>
 
 <div class="app-shell">
 
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
+```
+<!-- =====================================================
+     SIDEBAR
+====================================================== -->
 
-    <aside class="sidebar">
+<aside class="sidebar">
 
-        <div class="brand">
+    <div class="brand">
 
-            <div class="brand-icon">
-                🛡️
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <div>
+            <div class="brand-name">
+                TrustGuard
             </div>
 
-            <div>
-                <div class="brand-name">
-                    TrustGuard
+            <div class="brand-subtitle">
+                AI Risk Oversight Platform
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="nav-title">
+        Workspace
+    </div>
+
+
+    <a
+        href="#dashboard"
+        class="nav-item active"
+    >
+        <span class="nav-icon">⌂</span>
+        Dashboard
+    </a>
+
+
+    <a
+        href="#analyzer"
+        class="nav-item"
+    >
+        <span class="nav-icon">◈</span>
+        Risk Analyzer
+    </a>
+
+
+    <a
+        href="#history"
+        class="nav-item"
+    >
+        <span class="nav-icon">◷</span>
+        Approval History
+    </a>
+
+
+    <div class="nav-title">
+        Security
+    </div>
+
+
+    <a
+        href="#security"
+        class="nav-item"
+    >
+        <span class="nav-icon">♢</span>
+        Security Center
+    </a>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="security-status">
+
+            <span class="status-dot"></span>
+
+            <strong>
+                Protection Active
+            </strong>
+
+            <p>
+                TrustGuard monitoring is enabled and protecting AI decisions.
+            </p>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+====================================================== -->
+
+<main class="main-content">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div class="page-title">
+
+            <h1 id="dashboard">
+                Security Dashboard
+            </h1>
+
+            <p>
+                Monitor AI actions and control high-risk decisions.
+            </p>
+
+        </div>
+
+
+        <div class="topbar-actions">
+
+            <button
+                class="notification"
+                title="Notifications"
+            >
+                🔔
+
+                <span
+                    class="notification-dot"
+                ></span>
+
+            </button>
+
+
+            <div class="user-menu">
+
+                <div
+                    class="avatar"
+                    id="userAvatar"
+                >
+                    TG
                 </div>
 
-                <div class="brand-subtitle">
-                    AI Safety Platform
+                <div class="user-info">
+
+                    <strong
+                        id="currentUser"
+                    >
+                        Loading...
+                    </strong>
+
+                    <span>
+                        Protected account
+                    </span>
+
                 </div>
-            </div>
 
-        </div>
-
-
-        <div class="nav-title">
-            Workspace
-        </div>
-
-
-        <a
-            href="#dashboard"
-            class="nav-item active"
-        >
-            <span class="nav-icon">⌂</span>
-            Dashboard
-        </a>
-
-
-        <a
-            href="#analyzer"
-            class="nav-item"
-        >
-            <span class="nav-icon">◈</span>
-            Risk Analyzer
-        </a>
-
-
-        <a
-            href="#history"
-            class="nav-item"
-        >
-            <span class="nav-icon">◷</span>
-            Approval History
-        </a>
-
-
-        <div class="nav-title">
-            Security
-        </div>
-
-
-        <a
-            href="#security"
-            class="nav-item"
-        >
-            <span class="nav-icon">♢</span>
-            Security Center
-        </a>
-
-
-        <div class="sidebar-bottom">
-
-            <div class="security-status">
-
-                <span class="status-dot"></span>
-
-                <strong>
-                    Protection Active
-                </strong>
-
-                <p>
-                    TrustGuard monitoring is enabled.
-                </p>
-
-            </div>
-
-        </div>
-
-    </aside>
-
-
-    <!-- =====================================================
-         MAIN CONTENT
-    ====================================================== -->
-
-    <main class="main-content">
-
-
-        <!-- TOPBAR -->
-
-        <header class="topbar">
-
-            <div class="page-title">
-
-                <h1 id="dashboard">
-                    Security Dashboard
-                </h1>
-
-                <p>
-                    Monitor AI actions and control high-risk decisions.
-                </p>
-
-            </div>
-
-
-            <div class="topbar-actions">
 
                 <button
-                    class="notification"
-                    title="Notifications"
+                    class="logout-btn"
+                    onclick="logout()"
                 >
-                    🔔
-                    <span
-                        class="notification-dot"
-                    ></span>
+                    Logout
                 </button>
 
+            </div>
 
-                <div class="user-menu">
+        </div>
 
-                    <div
-                        class="avatar"
-                        id="userAvatar"
-                    >
-                        TG
+    </header>
+
+
+    <!-- =================================================
+         HERO
+    ================================================== -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+
+                <span>●</span>
+
+                AI Safety Monitoring Active
+
+            </div>
+
+
+            <h2>
+                Secure AI actions before
+                they become real-world actions.
+            </h2>
+
+
+            <p>
+                TrustGuard evaluates AI actions using
+                rule-based risk analysis, machine learning,
+                and hybrid safety decisions before sensitive
+                operations are allowed to proceed.
+            </p>
+
+        </div>
+
+
+        <div class="hero-shield">
+            🛡️
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         STATS
+    ================================================== -->
+
+    <section class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    TOTAL ACTIONS
+                </span>
+
+                <span class="stat-icon">
+                    ◈
+                </span>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalActions"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Decisions recorded
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    LOW RISK
+                </span>
+
+                <span class="stat-icon">
+                    ✓
+                </span>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="lowRiskCount"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Safe autonomous actions
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    MEDIUM RISK
+                </span>
+
+                <span class="stat-icon">
+                    !
+                </span>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="mediumRiskCount"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                User confirmation required
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    HIGH RISK
+                </span>
+
+                <span class="stat-icon">
+                    ⚠
+                </span>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="highRiskCount"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Human approval required
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         MAIN GRID
+    ================================================== -->
+
+    <div class="dashboard-grid">
+
+
+        <!-- =================================================
+             LEFT COLUMN
+        ================================================== -->
+
+        <div>
+
+
+            <!-- ANALYZER -->
+
+            <section
+                class="panel"
+                id="analyzer"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2 class="panel-title">
+                            Analyze an AI Action
+                        </h2>
+
+                        <div class="panel-subtitle">
+                            Describe what the AI agent wants to do.
+                        </div>
+
                     </div>
 
-                    <div class="user-info">
+                    <span>
+                        🧠
+                    </span>
 
-                        <strong
-                            id="currentUser"
+                </div>
+
+
+                <textarea
+                    id="actionInput"
+                    class="action-input"
+                    placeholder="Example: Transfer ₹30,000 to a newly added bank account"
+                ></textarea>
+
+
+                <div class="analyze-row">
+
+                    <span class="input-hint">
+                        Financial • Privacy • Data Modification •
+                        Irreversibility • External Impact
+                    </span>
+
+
+                    <button
+                        id="analyzeBtn"
+                        class="primary-btn"
+                        onclick="analyzeAction()"
+                    >
+                        Analyze Risk
+                    </button>
+
+                </div>
+
+
+                <!-- RESULT -->
+
+                <div
+                    id="result"
+                    class="result-card hidden"
+                >
+
+                    <div class="result-top">
+
+
+                        <div class="result-metric">
+
+                            <span>
+                                FINAL RISK
+                            </span>
+
+                            <strong
+                                id="riskLevel"
+                            >
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-metric">
+
+                            <span>
+                                DECISION
+                            </span>
+
+                            <strong
+                                id="decision"
+                            >
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-metric">
+
+                            <span>
+                                ML PREDICTION
+                            </span>
+
+                            <strong
+                                id="mlPrediction"
+                            >
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="result-metric">
+
+                            <span>
+                                RISK SCORE
+                            </span>
+
+                            <strong
+                                id="riskScore"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-details">
+
+                        <h4>
+                            Why TrustGuard made this decision
+                        </h4>
+
+
+                        <ul
+                            id="explanationList"
+                        ></ul>
+
+
+                        <div
+                            class="hybrid-box"
                         >
-                            Loading...
-                        </strong>
 
-                        <span>
-                            Protected account
-                        </span>
+                            <strong>
+                                Hybrid Analysis:
+                            </strong>
+
+                            <span
+                                id="hybridAgreement"
+                            >
+                                -
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- HUMAN APPROVAL -->
+
+                    <div
+                        id="approvalPanel"
+                        class="interaction-panel hidden"
+                    >
+
+                        <h3>
+                            🔐 Human Approval Required
+                        </h3>
+
+                        <p>
+                            This action has been classified as
+                            high risk. A human must explicitly
+                            approve or reject the action.
+                        </p>
+
+
+                        <div class="approval-buttons">
+
+                            <button
+                                id="approveBtn"
+                                class="approve-btn"
+                                onclick="approveAction()"
+                            >
+                                ✓ Approve Action
+                            </button>
+
+
+                            <button
+                                id="rejectBtn"
+                                class="reject-btn"
+                                onclick="rejectAction()"
+                            >
+                                ✕ Reject Action
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="approvalStatus"
+                            class="interaction-status"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- USER CONFIRMATION -->
+
+                    <div
+                        id="confirmationPanel"
+                        class="interaction-panel hidden"
+                    >
+
+                        <h3>
+                            ⚡ User Confirmation Required
+                        </h3>
+
+                        <p>
+                            This medium-risk action requires
+                            your confirmation before proceeding.
+                        </p>
+
+
+                        <div class="approval-buttons">
+
+                            <button
+                                id="confirmBtn"
+                                class="confirm-btn"
+                                onclick="confirmAction()"
+                            >
+                                ✓ Confirm Action
+                            </button>
+
+
+                            <button
+                                id="cancelBtn"
+                                class="cancel-btn"
+                                onclick="cancelAction()"
+                            >
+                                ✕ Cancel Action
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="confirmationStatus"
+                            class="interaction-status"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 APPROVAL HISTORY
+            ================================================== -->
+
+            <section
+                class="panel"
+                id="history"
+            >
+
+                <div class="history-toolbar">
+
+                    <div>
+
+                        <h2 class="panel-title">
+                            Approval History
+                        </h2>
+
+                        <div class="panel-subtitle">
+                            Recent human-in-the-loop decisions.
+                        </div>
 
                     </div>
 
 
                     <button
-                        class="logout-btn"
-                        onclick="logout()"
+                        class="clear-history-btn"
+                        onclick="clearHistory()"
                     >
-                        Logout
+                        🗑 Clear History
                     </button>
 
                 </div>
 
-            </div>
-
-        </header>
-
-
-        <!-- HERO -->
-
-        <section class="hero">
-
-            <div class="hero-content">
-
-                <div class="hero-badge">
-                    <span>●</span>
-                    AI Safety Monitoring Active
-                </div>
-
-
-                <h2>
-                    Secure your AI actions
-                    before they become real-world actions.
-                </h2>
-
-
-                <p>
-                    TrustGuard evaluates actions using
-                    rule-based risk analysis, machine
-                    learning, and hybrid safety decisions
-                    before allowing sensitive operations.
-                </p>
-
-            </div>
-
-
-            <div class="hero-shield">
-                🛡️
-            </div>
-
-        </section>
-
-
-        <!-- STATS -->
-
-        <section class="stats-grid">
-
-            <div class="stat-card">
-
-                <div class="stat-top">
-
-                    <span class="stat-label">
-                        TOTAL ACTIONS
-                    </span>
-
-                    <span class="stat-icon">
-                        ◈
-                    </span>
-
-                </div>
 
                 <div
-                    class="stat-value"
-                    id="totalActions"
-                >
-                    0
-                </div>
-
-                <div class="stat-description">
-                    Decisions recorded
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-top">
-
-                    <span class="stat-label">
-                        LOW RISK
-                    </span>
-
-                    <span class="stat-icon">
-                        ✓
-                    </span>
-
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="lowRiskCount"
-                >
-                    0
-                </div>
-
-                <div class="stat-description">
-                    Safe actions
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-top">
-
-                    <span class="stat-label">
-                        MEDIUM RISK
-                    </span>
-
-                    <span class="stat-icon">
-                        !
-                    </span>
-
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="mediumRiskCount"
-                >
-                    0
-                </div>
-
-                <div class="stat-description">
-                    User confirmation
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-top">
-
-                    <span class="stat-label">
-                        HIGH RISK
-                    </span>
-
-                    <span class="stat-icon">
-                        ⚠
-                    </span>
-
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="highRiskCount"
-                >
-                    0
-                </div>
-
-                <div class="stat-description">
-                    Human approval
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- MAIN GRID -->
-
-        <div class="dashboard-grid">
-
-
-            <!-- LEFT COLUMN -->
-
-            <div>
-
-
-                <!-- ANALYZER -->
-
-                <section
-                    class="panel"
-                    id="analyzer"
+                    id="historyContainer"
                 >
 
-                    <div class="panel-header">
-
-                        <div>
-
-                            <h2 class="panel-title">
-                                Analyze an AI Action
-                            </h2>
-
-                            <div class="panel-subtitle">
-                                Describe what the AI wants to do.
-                            </div>
-
-                        </div>
-
-                        <span>
-                            🧠
-                        </span>
-
+                    <div class="empty-history">
+                        Loading history...
                     </div>
 
+                </div>
 
-                    <textarea
-                        id="actionInput"
-                        class="action-input"
-                        placeholder="Example: Transfer ₹30,000 to a newly added bank account"
-                    ></textarea>
-
-
-                    <div class="analyze-row">
-
-                        <span class="input-hint">
-                            TrustGuard will evaluate financial,
-                            privacy, external-impact and
-                            irreversibility risks.
-                        </span>
-
-
-                        <button
-                            id="analyzeBtn"
-                            class="primary-btn"
-                            onclick="analyzeAction()"
-                        >
-                            Analyze Risk
-                        </button>
-
-                    </div>
-
-
-                    <!-- RESULT -->
-
-                    <div
-                        id="result"
-                        class="result-card hidden"
-                    >
-
-                        <div class="result-top">
-
-                            <div class="result-metric">
-
-                                <span>
-                                    FINAL RISK
-                                </span>
-
-                                <strong
-                                    id="riskLevel"
-                                >
-                                    -
-                                </strong>
-
-                            </div>
-
-
-                            <div class="result-metric">
-
-                                <span>
-                                    DECISION
-                                </span>
-
-                                <strong
-                                    id="decision"
-                                >
-                                    -
-                                </strong>
-
-                            </div>
-
-
-                            <div class="result-metric">
-
-                                <span>
-                                    ML PREDICTION
-                                </span>
-
-                                <strong
-                                    id="mlPrediction"
-                                >
-                                    -
-                                </strong>
-
-                            </div>
-
-
-                            <div class="result-metric">
-
-                                <span>
-                                    RISK SCORE
-                                </span>
-
-                                <strong
-                                    id="riskScore"
-                                >
-                                    0
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="result-details">
-
-                            <h4>
-                                Why TrustGuard made this decision
-                            </h4>
-
-
-                            <ul
-                                id="explanationList"
-                            ></ul>
-
-
-                            <div
-                                class="hybrid-box"
-                            >
-
-                                <strong>
-                                    Hybrid Analysis:
-                                </strong>
-
-                                <span
-                                    id="hybridAgreement"
-                                >
-                                    -
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- HUMAN APPROVAL -->
-
-                        <div
-                            id="approvalPanel"
-                            class="interaction-panel hidden"
-                        >
-
-                            <h3>
-                                🔐 Human Approval Required
-                            </h3>
-
-                            <p>
-                                This action has been classified
-                                as high risk. A human must
-                                explicitly approve or reject it.
-                            </p>
-
-
-                            <div class="approval-buttons">
-
-                                <button
-                                    id="approveBtn"
-                                    class="approve-btn"
-                                    onclick="approveAction()"
-                                >
-                                    ✓ Approve Action
-                                </button>
-
-
-                                <button
-                                    id="rejectBtn"
-                                    class="reject-btn"
-                                    onclick="rejectAction()"
-                                >
-                                    ✕ Reject Action
-                                </button>
-
-                            </div>
-
-
-                            <div
-                                id="approvalStatus"
-                                class="interaction-status"
-                            ></div>
-
-                        </div>
-
-
-                        <!-- USER CONFIRMATION -->
-
-                        <div
-                            id="confirmationPanel"
-                            class="interaction-panel hidden"
-                        >
-
-                            <h3>
-                                ⚡ User Confirmation Required
-                            </h3>
-
-                            <p>
-                                This medium-risk action requires
-                                your confirmation before proceeding.
-                            </p>
-
-
-                            <div class="approval-buttons">
-
-                                <button
-                                    id="confirmBtn"
-                                    class="confirm-btn"
-                                    onclick="confirmAction()"
-                                >
-                                    ✓ Confirm Action
-                                </button>
-
-
-                                <button
-                                    id="cancelBtn"
-                                    class="cancel-btn"
-                                    onclick="cancelAction()"
-                                >
-                                    ✕ Cancel Action
-                                </button>
-
-                            </div>
-
-
-                            <div
-                                id="confirmationStatus"
-                                class="interaction-status"
-                            ></div>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- APPROVAL HISTORY -->
-
-                <section
-                    class="panel"
-                    id="history"
-                >
-
-                    <div class="history-toolbar">
-
-                        <div>
-
-                            <h2 class="panel-title">
-                                Approval History
-                            </h2>
-
-                            <div class="panel-subtitle">
-                                Your recent human-in-the-loop decisions.
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            class="clear-history-btn"
-                            onclick="clearHistory()"
-                        >
-                            🗑 Clear History
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        id="historyContainer"
-                    >
-
-                        <div class="empty-history">
-                            Loading history...
-                        </div>
-
-                    </div>
-
-                </section>
-
-            </div>
-
-
-            <!-- RIGHT COLUMN -->
-
-            <div>
-
-
-                <!-- RISK OVERVIEW -->
-
-                <section class="panel">
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <h2 class="panel-title">
-                                Risk Intelligence
-                            </h2>
-
-                            <div class="panel-subtitle">
-                                Current protection posture
-                            </div>
-
-                        </div>
-
-                        <span>
-                            ◉
-                        </span>
-
-                    </div>
-
-
-                    <div class="risk-visual">
-
-                        <div class="risk-ring">
-
-                            <div
-                                class="risk-ring-content"
-                            >
-
-                                <strong>
-                                    AI
-                                </strong>
-
-                                <span>
-                                    PROTECTED
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            ⚙
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                Rule Engine
-                            </strong>
-
-                            <span>
-                                Deterministic risk scoring
-                            </span>
-
-                        </div>
-
-                        <div class="layer-status">
-                            ACTIVE
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            🧠
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                ML Predictor
-                            </strong>
-
-                            <span>
-                                Behavioral risk prediction
-                            </span>
-
-                        </div>
-
-                        <div class="layer-status">
-                            ACTIVE
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            🔀
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                Hybrid Engine
-                            </strong>
-
-                            <span>
-                                Safety-first final decision
-                            </span>
-
-                        </div>
-
-                        <div class="layer-status">
-                            ACTIVE
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            👤
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                Human Oversight
-                            </strong>
-
-                            <span>
-                                Approval for sensitive actions
-                            </span>
-
-                        </div>
-
-                        <div class="layer-status">
-                            ACTIVE
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- SECURITY CENTER -->
-
-                <section
-                    class="panel"
-                    id="security"
-                >
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <h2 class="panel-title">
-                                Security Center
-                            </h2>
-
-                            <div class="panel-subtitle">
-                                TrustGuard protection layers
-                            </div>
-
-                        </div>
-
-                        <span>
-                            🛡️
-                        </span>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            🔒
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                Account Security
-                            </strong>
-
-                            <span>
-                                Authenticated session
-                            </span>
-
-                        </div>
-
-                        <div class="layer-status">
-                            SECURE
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            📊
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                Risk Monitoring
-                            </strong>
-
-                            <span>
-                                Continuous action analysis
-                            </span>
-
-                        </div>
-
-                        <div class="layer-status">
-                            ON
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            📝
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                Audit Trail
-                            </strong>
-
-                            <span>
-                                Persistent approval records
-                            </span>
-
-                        </div>
-
-                        <div class="layer-status">
-                            ON
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            🚦
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                Safety Gate
-                            </strong>
-
-                            <span>
-                                Blocks unsafe autonomy
-                            </span>
-
-                        </div>
-
-                        <div class="layer-status">
-                            ON
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- DECISION MODEL -->
-
-                <section class="panel">
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <h2 class="panel-title">
-                                Decision Model
-                            </h2>
-
-                            <div class="panel-subtitle">
-                                Human oversight policy
-                            </div>
-
-                        </div>
-
-                        <span>
-                            🚦
-                        </span>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            🟢
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                Low Risk
-                            </strong>
-
-                            <span>
-                                Autonomous execution
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            🟡
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                Medium Risk
-                            </strong>
-
-                            <span>
-                                User confirmation
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-layer">
-
-                        <div class="layer-icon">
-                            🔴
-                        </div>
-
-                        <div class="layer-info">
-
-                            <strong>
-                                High Risk
-                            </strong>
-
-                            <span>
-                                Human approval required
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-            </div>
+            </section>
 
         </div>
 
-    </main>
+
+        <!-- =================================================
+             RIGHT COLUMN
+        ================================================== -->
+
+        <div>
+
+
+            <!-- RISK INTELLIGENCE -->
+
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2 class="panel-title">
+                            Risk Intelligence
+                        </h2>
+
+                        <div class="panel-subtitle">
+                            Current protection posture
+                        </div>
+
+                    </div>
+
+                    <span>
+                        ◉
+                    </span>
+
+                </div>
+
+
+                <div class="risk-visual">
+
+                    <div class="risk-ring">
+
+                        <div
+                            class="risk-ring-content"
+                        >
+
+                            <strong>
+                                AI
+                            </strong>
+
+                            <span>
+                                PROTECTED
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        ⚙
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            Rule Engine
+                        </strong>
+
+                        <span>
+                            Deterministic risk scoring
+                        </span>
+
+                    </div>
+
+                    <div class="layer-status">
+                        ACTIVE
+                    </div>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        🧠
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            ML Predictor
+                        </strong>
+
+                        <span>
+                            Behavioral risk prediction
+                        </span>
+
+                    </div>
+
+                    <div class="layer-status">
+                        ACTIVE
+                    </div>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        🔀
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            Hybrid Engine
+                        </strong>
+
+                        <span>
+                            Safety-first final decision
+                        </span>
+
+                    </div>
+
+                    <div class="layer-status">
+                        ACTIVE
+                    </div>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        👤
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            Human Oversight
+                        </strong>
+
+                        <span>
+                            Approval for sensitive actions
+                        </span>
+
+                    </div>
+
+                    <div class="layer-status">
+                        ACTIVE
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SECURITY CENTER
+            ================================================== -->
+
+            <section
+                class="panel"
+                id="security"
+            >
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2 class="panel-title">
+                            Security Center
+                        </h2>
+
+                        <div class="panel-subtitle">
+                            TrustGuard protection layers
+                        </div>
+
+                    </div>
+
+                    <span>
+                        🛡️
+                    </span>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        🔒
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            Account Security
+                        </strong>
+
+                        <span>
+                            Authenticated session
+                        </span>
+
+                    </div>
+
+                    <div class="layer-status">
+                        SECURE
+                    </div>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        📊
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            Risk Monitoring
+                        </strong>
+
+                        <span>
+                            Continuous action analysis
+                        </span>
+
+                    </div>
+
+                    <div class="layer-status">
+                        ON
+                    </div>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        📝
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            Audit Trail
+                        </strong>
+
+                        <span>
+                            Persistent approval records
+                        </span>
+
+                    </div>
+
+                    <div class="layer-status">
+                        ON
+                    </div>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        🚦
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            Safety Gate
+                        </strong>
+
+                        <span>
+                            Blocks unsafe autonomy
+                        </span>
+
+                    </div>
+
+                    <div class="layer-status">
+                        ON
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DECISION MODEL
+            ================================================== -->
+
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2 class="panel-title">
+                            Decision Model
+                        </h2>
+
+                        <div class="panel-subtitle">
+                            Human oversight policy
+                        </div>
+
+                    </div>
+
+                    <span>
+                        🚦
+                    </span>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        🟢
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            Low Risk
+                        </strong>
+
+                        <span>
+                            Autonomous execution
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        🟡
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            Medium Risk
+                        </strong>
+
+                        <span>
+                            User confirmation
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-layer">
+
+                    <div class="layer-icon">
+                        🔴
+                    </div>
+
+                    <div class="layer-info">
+
+                        <strong>
+                            High Risk
+                        </strong>
+
+                        <span>
+                            Human approval required
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</main>
+```
 
 </div>
 
-
-<!-- EXISTING TRUSTGUARD JAVASCRIPT -->
+<!-- =========================================================
+     EXISTING TRUSTGUARD JAVASCRIPT
+========================================================= -->
 
 <script src="/script.js"></script>
 
-
-<!-- SMALL DASHBOARD ENHANCEMENTS -->
+<!-- =========================================================
+     USER AVATAR ENHANCEMENT
+========================================================= -->
 
 <script>
 
@@ -1913,8 +2582,11 @@
 
                 avatar.textContent =
                     initials;
+
             }
+
         }
+
     }
 
 
@@ -1941,7 +2613,9 @@
 
 
                 return result;
+
             };
+
     }
 
 </script>
