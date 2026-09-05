@@ -1502,7 +1502,7 @@
             left: 0;
             right: 0;
             top: 0;
-            height: 2px;
+            height: 3px;
             background: linear-gradient(
                 90deg,
                 transparent,
@@ -1514,13 +1514,38 @@
         }
 
         @keyframes scanLine {
-            from {
-                transform: translateY(0);
-            }
-            to {
-                transform: translateY(400px);
-            }
-        }
+    0% {
+        transform: translateY(-20px);
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgb(0,255,255),
+            rgb(0,120,255),
+            transparent
+        );
+    }
+
+    50% {
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgb(255,0,255),
+            rgb(0,255,120),
+            transparent
+        );
+    }
+
+    100% {
+        transform: translateY(400px);
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgb(255,40,80),
+            rgb(255,220,0),
+            transparent
+        );
+    }
+}
 
         .scan-sequence {
     margin-top: 16px;
@@ -1613,7 +1638,15 @@
         .scan-stage.active {
     animation: stagePulse .8s ease-in-out infinite;
 }
+.complete-stage {
+    color: #9eeed0;
+    text-shadow: 0 0 10px rgba(38,230,165,.55);
+}
 
+.complete-stage.active {
+    color: #9eeed0;
+    text-shadow: 0 0 18px rgba(38,230,165,.9);
+}
 @keyframes stagePulse {
     0%, 100% {
         transform: scale(1);
