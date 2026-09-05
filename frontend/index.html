@@ -1560,6 +1560,49 @@
         scanSequenceIn .35s ease,
         rgbScanBorder 3s linear infinite;
 }
+        .scan-sequence {
+    position: relative;
+    overflow: hidden;
+}
+
+.scan-sequence::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -4px;
+    height: 4px;
+    background: linear-gradient(
+        90deg,
+        rgb(0,255,255),
+        rgb(0,120,255),
+        rgb(255,0,255),
+        rgb(0,255,120),
+        rgb(255,220,0),
+        rgb(255,40,80)
+    );
+    box-shadow:
+        0 0 10px rgb(0,255,255),
+        0 0 22px rgb(255,0,255);
+    animation: verticalRGBScan 1.5s linear infinite;
+    z-index: 5;
+}
+
+@keyframes verticalRGBScan {
+    0% {
+        top: -4px;
+        filter: hue-rotate(0deg);
+    }
+
+    50% {
+        filter: hue-rotate(180deg);
+    }
+
+    100% {
+        top: 100%;
+        filter: hue-rotate(360deg);
+    }
+}
 
 @keyframes rgbScanBorder {
     0% {
@@ -1620,26 +1663,7 @@
     );
     box-shadow: 0 0 12px rgba(32,217,255,.5);
 }
-        #scanProgressBar::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -40px;
-    width: 40px;
-    height: 100%;
-    background: rgba(255,255,255,.45);
-    box-shadow: 0 0 12px rgba(32,217,255,.8);
-    animation: progressBeam 1.1s linear infinite;
-}
-
-@keyframes progressBeam {
-    from {
-        left: -40px;
-    }
-    to {
-        left: 110%;
-    }
-}
+        
         
 
 .scan-stages {
