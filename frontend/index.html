@@ -1702,7 +1702,7 @@
                     🔔
                 </div>
 
-                <div class="profile">
+                <div class="profile" onclick="document.getElementById('profileSection')?.scrollIntoView({behavior:'smooth'})">
 
                     <div id="userAvatar">TG</div>
 
@@ -2406,8 +2406,34 @@
             </div>
 
         </section>
+    <!-- PROFILE SECTION -->
+    <section id="profileSection" class="panel">
+        <div class="panel-header">
+            <div>
+                <div class="panel-kicker">ACCOUNT</div>
+                <h2>Profile</h2>
+            </div>
 
-    </main>
+            <span class="status-badge">PROTECTED</span>
+        </div>
+
+        <div class="profile-details">
+            <div class="profile-avatar-large" id="profileAvatar">
+                TG
+            </div>
+
+            <div class="profile-info">
+                <h3 id="profileName">Protected Account</h3>
+                <p id="profileEmail">Account email</p>
+                <span class="profile-role">
+                    Security Administrator
+                </span>
+            </div>
+        </div>
+    </section>
+
+</main>
+    
 
 </div>
 
