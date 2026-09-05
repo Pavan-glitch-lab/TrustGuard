@@ -1384,6 +1384,93 @@
             }
         }
 
+        .scan-sequence {
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(32, 217, 255, .035);
+    border: 1px solid rgba(32, 217, 255, .12);
+    animation: scanSequenceIn .35s ease;
+}
+
+.scan-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #7eeaff;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.scan-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 12px var(--cyan);
+    animation: scanDotPulse .8s ease-in-out infinite;
+}
+
+.scan-progress {
+    height: 3px;
+    margin-top: 12px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: rgba(255,255,255,.06);
+}
+
+#scanProgressBar {
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(
+        90deg,
+        var(--blue),
+        var(--cyan)
+    );
+    box-shadow: 0 0 12px rgba(32,217,255,.5);
+}
+
+.scan-stages {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.scan-stage {
+    color: #506783;
+    font-size: 7px;
+    font-weight: 800;
+    text-align: center;
+    transition: .3s ease;
+}
+
+.scan-stage.active {
+    color: var(--cyan);
+    text-shadow: 0 0 8px rgba(32,217,255,.45);
+}
+
+@keyframes scanSequenceIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scanDotPulse {
+    50% {
+        transform: scale(1.5);
+        opacity: .45;
+    }
+}
+        
         /* =========================
            VISIBILITY CONTROL
         ========================== */
@@ -1783,6 +1870,28 @@
 
                     </div>
 
+                    <div id="scanSequence" class="scan-sequence hidden">
+
+    <div class="scan-status">
+        <span class="scan-dot"></span>
+        <span id="scanStatusText">CAPTURING</span>
+    </div>
+
+    <div class="scan-progress">
+        <div id="scanProgressBar"></div>
+    </div>
+
+    <div class="scan-stages">
+
+        <span class="scan-stage active">CAPTURING</span>
+        <span class="scan-stage">ANALYZING</span>
+        <span class="scan-stage">ML CHECK</span>
+        <span class="scan-stage">HYBRID DECISION</span>
+        <span class="scan-stage">COMPLETE</span>
+
+    </div>
+
+</div>
                     <div class="analyzer-actions">
 
                         <div class="analyzer-hint">
@@ -2357,34 +2466,106 @@
         });
 
 
-        /* Analyzer scanning effect */
+        /* Analyzer scanning sequence */
 
-        const analyzeButton =
-            document.getElementById("analyzeBtn");
+const analyzeButton =
+    document.getElementById("analyzeBtn");
 
-        const actionInput =
-            document.getElementById("actionInput");
+const actionInput =
+    document.getElementById("actionInput");
 
-        if (analyzeButton && actionInput) {
+const scanSequence =
+    document.getElementById("scanSequence");
 
-            analyzeButton.addEventListener("click", () => {
+const scanStatusText =
+    document.getElementById("scanStatusText");
 
-                if (!actionInput.value.trim()) return;
+const scanProgressBar =
+    document.getElementById("scanProgressBar");
 
-                const analyzer =
-                    document.querySelector(".analyzer");
+const scanStages =
+    document.querySelectorAll(".scan-stage");
 
-                if (!analyzer) return;
+function runScanSequence() {
 
-                analyzer.classList.add("scanning");
+    if (!scanSequence) return;
 
-                setTimeout(() => {
-                    analyzer.classList.remove("scanning");
-                }, 1500);
+    scanSequence.classList.remove("hidden");
 
-            });
+    scanStages.forEach(stage => {
+        stage.classList.remove("active");
+    });
 
+    const stages = [
+        "CAPTURING",
+        "ANALYZING",
+        "ML CHECK",
+        "HYBRID DECISION",
+        "COMPLETE"
+    ];
+
+    const durations = [
+        350,
+        450,
+        450,
+        450,
+        300
+    ];
+
+    let progress = 0;
+    let index = 0;
+
+    if (scanProgressBar) {
+        scanProgressBar.style.width = "0%";
+    }
+
+    function nextStage() {
+
+        if (index >= stages.length) {
+            setTimeout(() => {
+                scanSequence.classList.add("hidden");
+            }, 500);
+            return;
         }
+
+        if (scanStatusText) {
+            scanStatusText.textContent = stages[index];
+        }
+
+        scanStages.forEach(stage => {
+            stage.classList.remove("active");
+        });
+
+        if (scanStages[index]) {
+            scanStages[index].classList.add("active");
+        }
+
+        progress = ((index + 1) / stages.length) * 100;
+
+        if (scanProgressBar) {
+            scanProgressBar.style.width = progress + "%";
+        }
+
+        setTimeout(() => {
+            index++;
+            nextStage();
+        }, durations[index]);
+    }
+
+    nextStage();
+}
+
+if (analyzeButton && actionInput) {
+
+    analyzeButton.addEventListener("click", () => {
+
+        if (!actionInput.value.trim()) return;
+
+        runScanSequence();
+
+    });
+
+}
 
 
         /* Navigation smooth behavior */
