@@ -1758,12 +1758,33 @@
     transition: .3s ease;
 }
 
-.scan-stage.active {
-    color: var(--cyan);
-    text-shadow: 0 0 8px rgba(32,217,255,.45);
-}
-        .scan-stage.active {
+..scan-stage.active {
     animation: stagePulse .8s ease-in-out infinite;
+}
+
+.scan-stage.active:nth-child(1) {
+    color: rgb(0,255,255);
+    text-shadow: 0 0 12px rgb(0,255,255);
+}
+
+.scan-stage.active:nth-child(2) {
+    color: rgb(0,120,255);
+    text-shadow: 0 0 12px rgb(0,120,255);
+}
+
+.scan-stage.active:nth-child(3) {
+    color: rgb(255,0,255);
+    text-shadow: 0 0 12px rgb(255,0,255);
+}
+
+.scan-stage.active:nth-child(4) {
+    color: rgb(0,255,120);
+    text-shadow: 0 0 12px rgb(0,255,120);
+}
+
+.scan-stage.active:nth-child(5) {
+    color: rgb(255,220,0);
+    text-shadow: 0 0 15px rgb(255,220,0);
 }
 .complete-stage {
     color: #9eeed0;
