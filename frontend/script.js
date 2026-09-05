@@ -531,6 +531,184 @@ async function analyzeAction() {
     }
 }
 
+/* ============================================================
+   DYNAMIC ANIMATED RISK GAUGE
+============================================================ */
+
+let currentGaugeScore = 0;
+
+function updateRiskGauge(score, riskLevel) {
+
+    const ring =
+        document.querySelector(".risk-ring");
+
+    const value =
+        document.querySelector(".risk-ring-value");
+
+    const label =
+        document.querySelector(".risk-ring-label");
+
+    if (!ring || !value || !label) {
+        return;
+    }
+
+    const targetScore =
+        Math.max(
+            0,
+            Math.min(
+                25,
+                Number(score) || 0
+            )
+        );
+
+    const normalizedRisk =
+        String(
+            riskLevel || ""
+        ).toLowerCase();
+
+    let color =
+        "#26e6a5";
+
+    if (
+        normalizedRisk.includes("medium")
+    ) {
+
+        color =
+            "#ffb84d";
+
+    } else if (
+        normalizedRisk.includes("high")
+    ) {
+
+        color =
+            "#ff5368";
+    }
+
+    const startScore =
+        currentGaugeScore;
+
+    const difference =
+        targetScore - startScore;
+
+    const duration =
+        900;
+
+    let startTime =
+        null;
+
+    function animateGauge(timestamp) {
+
+        if (!startTime) {
+            startTime = timestamp;
+        }
+
+        const elapsed =
+            timestamp - startTime;
+
+        const progress =
+            Math.min(
+                elapsed / duration,
+                1
+            );
+
+        const eased =
+            1 -
+            Math.pow(
+                1 - progress,
+                3
+            );
+
+        const animatedScore =
+            startScore +
+            difference * eased;
+
+        const percentage =
+            (animatedScore / 25) * 100;
+
+        const degrees =
+            percentage * 3.6;
+
+        ring.style.background =
+            `conic-gradient(
+                ${color} 0deg,
+                ${color} ${degrees}deg,
+                rgba(255,255,255,.07) ${degrees}deg,
+                rgba(255,255,255,.07) 360deg
+            )`;
+
+        value.textContent =
+            String(
+                Math.round(
+                    animatedScore
+                )
+            );
+
+        label.textContent =
+            normalizedRisk
+                ? normalizedRisk.toUpperCase()
+                : "PROTECTED";
+
+        ring.style.boxShadow =
+            `0 0 45px ${color}33`;
+
+        if (progress < 1) {
+
+            requestAnimationFrame(
+                animateGauge
+            );
+
+        } else {
+
+            currentGaugeScore =
+                targetScore;
+
+            value.textContent =
+                String(targetScore);
+        }
+    }
+
+    if (
+        window.matchMedia &&
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches
+    ) {
+
+        currentGaugeScore =
+            targetScore;
+
+        const percentage =
+            (targetScore / 25) * 100;
+
+        const degrees =
+            percentage * 3.6;
+
+        ring.style.background =
+            `conic-gradient(
+                ${color} 0deg,
+                ${color} ${degrees}deg,
+                rgba(255,255,255,.07) ${degrees}deg,
+                rgba(255,255,255,.07) 360deg
+            )`;
+
+        value.textContent =
+            String(targetScore);
+
+        label.textContent =
+            normalizedRisk
+                ? normalizedRisk.toUpperCase()
+                : "PROTECTED";
+
+        ring.style.boxShadow =
+            `0 0 45px ${color}33`;
+
+        return;
+    }
+
+    requestAnimationFrame(
+        animateGauge
+    );
+}
 
 /* ============================================================
    DISPLAY ANALYSIS
@@ -639,6 +817,11 @@ function displayAnalysis(data) {
         riskScore.textContent =
             String(score);
     }
+
+   updateRiskGauge(
+    score,
+    finalRisk
+   );
 
     if (explanationList) {
 
