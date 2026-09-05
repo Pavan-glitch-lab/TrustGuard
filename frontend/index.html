@@ -2811,6 +2811,12 @@ function runScanSequence() {
 
     scanSequence.classList.remove("hidden");
 
+    if (analyzeButton) {
+    analyzeButton.disabled = true;
+    analyzeButton.dataset.originalText = analyzeButton.innerHTML;
+    analyzeButton.innerHTML = "⟳ ANALYZING...";
+    }
+
     scanStages.forEach(stage => {
         stage.classList.remove("active");
     });
@@ -2841,11 +2847,18 @@ function runScanSequence() {
     function nextStage() {
 
         if (index >= stages.length) {
-            setTimeout(() => {
-                scanSequence.classList.add("hidden");
-            }, 500);
-            return;
-        }
+    if (analyzeButton) {
+        analyzeButton.disabled = false;
+        analyzeButton.innerHTML =
+            analyzeButton.dataset.originalText || "⚡ ANALYZE ACTION";
+    }
+
+    setTimeout(() => {
+        scanSequence.classList.add("hidden");
+    }, 500);
+
+    return;
+}
 
         if (scanStatusText) {
             scanStatusText.textContent = stages[index];
