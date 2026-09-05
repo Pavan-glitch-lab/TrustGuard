@@ -1727,12 +1727,96 @@ function renderHistory(
 
 
 /* ============================================================
-   STATISTICS
+   ANIMATED STATISTICS
 ============================================================ */
 
-function updateStatistics(
-    history
-) {
+function animateCounter(element, target) {
+
+    if (!element) {
+        return;
+    }
+
+    const finalValue = Number(target) || 0;
+    const currentValue = Number(
+        element.textContent.replace(/[^\d]/g, "")
+    ) || 0;
+
+    if (currentValue === finalValue) {
+        element.textContent = String(finalValue);
+        return;
+    }
+
+    // Respect the user's reduced-motion preference.
+    if (
+        window.matchMedia &&
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches
+    ) {
+        element.textContent = String(finalValue);
+        return;
+    }
+
+    const duration = 800;
+    const startValue = currentValue;
+    const difference = finalValue - startValue;
+    let startTime = null;
+
+    function animate(timestamp) {
+
+        if (!startTime) {
+            startTime = timestamp;
+        }
+
+        const elapsed =
+            timestamp - startTime;
+
+        const progress =
+            Math.min(
+                elapsed / duration,
+                1
+            );
+
+        // Smooth ease-out effect.
+        const eased =
+            1 - Math.pow(
+                1 - progress,
+                3
+            );
+
+        const value =
+            Math.round(
+                startValue +
+                difference * eased
+            );
+
+        element.textContent =
+            String(value);
+
+        if (progress < 1) {
+
+            requestAnimationFrame(
+                animate
+            );
+
+        } else {
+
+            element.textContent =
+                String(finalValue);
+        }
+    }
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+
+/* ============================================================
+   UPDATE STATISTICS
+============================================================ */
+
+function updateStatistics(history) {
 
     const total =
         document.getElementById(
@@ -1763,30 +1847,23 @@ function updateStatistics(
 
             const risk =
                 String(
-                    item.risk ||
-                    ""
+                    item.risk || ""
                 ).toLowerCase();
 
             if (
-                risk.includes(
-                    "low"
-                )
+                risk.includes("low")
             ) {
 
                 lowCount++;
 
             } else if (
-                risk.includes(
-                    "medium"
-                )
+                risk.includes("medium")
             ) {
 
                 mediumCount++;
 
             } else if (
-                risk.includes(
-                    "high"
-                )
+                risk.includes("high")
             ) {
 
                 highCount++;
@@ -1794,31 +1871,26 @@ function updateStatistics(
         }
     );
 
-    if (total) {
+    animateCounter(
+        total,
+        history.length
+    );
 
-        total.textContent =
-            history.length;
-    }
+    animateCounter(
+        low,
+        lowCount
+    );
 
-    if (low) {
+    animateCounter(
+        medium,
+        mediumCount
+    );
 
-        low.textContent =
-            lowCount;
-    }
-
-    if (medium) {
-
-        medium.textContent =
-            mediumCount;
-    }
-
-    if (high) {
-
-        high.textContent =
-            highCount;
-    }
+    animateCounter(
+        high,
+        highCount
+    );
 }
-
 
 /* ============================================================
    CLEAR HISTORY
