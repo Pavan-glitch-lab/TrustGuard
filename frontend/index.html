@@ -1610,6 +1610,21 @@
     color: var(--cyan);
     text-shadow: 0 0 8px rgba(32,217,255,.45);
 }
+        .scan-stage.active {
+    animation: stagePulse .8s ease-in-out infinite;
+}
+
+@keyframes stagePulse {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 0 0 8px rgba(32,217,255,.45);
+    }
+
+    50% {
+        transform: scale(1.08);
+        text-shadow: 0 0 16px rgba(32,217,255,.8);
+    }
+}
 
 @keyframes scanSequenceIn {
     from {
