@@ -1659,6 +1659,31 @@
     font-weight: 900;
     letter-spacing: 1px;
 }
+        .scan-status {
+    animation: rgbStatusPulse 1.5s linear infinite;
+}
+
+@keyframes rgbStatusPulse {
+    0% {
+        color: rgb(0,255,255);
+        text-shadow: 0 0 8px rgba(0,255,255,.7);
+    }
+
+    33% {
+        color: rgb(0,120,255);
+        text-shadow: 0 0 10px rgba(0,120,255,.7);
+    }
+
+    66% {
+        color: rgb(255,0,255);
+        text-shadow: 0 0 10px rgba(255,0,255,.7);
+    }
+
+    100% {
+        color: rgb(0,255,120);
+        text-shadow: 0 0 8px rgba(0,255,120,.7);
+    }
+}
 
 .scan-dot {
     width: 7px;
