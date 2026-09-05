@@ -744,8 +744,14 @@
         ========================== */
 
         .analyzer {
-            min-height: 410px;
-        }
+    min-height: 410px;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.analyzer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(30,130,255,.12);
+}
 
         .analyzer-body {
             padding: 0 24px 24px;
