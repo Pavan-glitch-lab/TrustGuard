@@ -971,8 +971,21 @@
         }
 
         .result-card {
-            padding: 24px;
-        }
+    padding: 24px;
+    animation: resultCardIn .5s ease both;
+}
+
+@keyframes resultCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
 
         .result-top {
             display: flex;
