@@ -1610,74 +1610,78 @@
 
 <div class="app-shell">
 
-    <!-- =========================
-         SIDEBAR
-    ========================== -->
+<!-- =========================
+     SIDEBAR
+========================== -->
 
-    <aside class="sidebar">
+<aside class="sidebar">
 
-        <div class="brand">
-            <div class="brand-icon">🛡</div>
+    <div class="brand">
+        <div class="brand-icon">🛡</div>
 
-            <div>
-                <div class="brand-name">TrustGuard</div>
-                <div class="brand-subtitle">AI Risk Oversight Platform</div>
-            </div>
+        <div>
+            <div class="brand-name">TrustGuard</div>
+            <div class="brand-subtitle">AI Risk Oversight Platform</div>
+        </div>
+    </div>
+
+    <div class="nav-section">
+
+        <div class="nav-title">Workspace</div>
+
+        <div class="nav-item active"
+             onclick="document.getElementById('dashboardSection')?.scrollIntoView({behavior:'smooth'})">
+            <div class="nav-icon">⌂</div>
+            <div class="nav-text">Dashboard</div>
         </div>
 
-        <div class="nav-section">
-
-            <div class="nav-title">Workspace</div>
-
-            <div class="nav-item active">
-                <div class="nav-icon">⌂</div>
-                <div class="nav-text">Dashboard</div>
-            </div>
-
-            <div class="nav-item">
-                <div class="nav-icon">◇</div>
-                <div class="nav-text">Risk Analyzer</div>
-            </div>
-
-            <div class="nav-item">
-                <div class="nav-icon">◷</div>
-                <div class="nav-text">Approval History</div>
-            </div>
-
+        <div class="nav-item"
+             onclick="document.getElementById('analyzerSection')?.scrollIntoView({behavior:'smooth'})">
+            <div class="nav-icon">◇</div>
+            <div class="nav-text">Risk Analyzer</div>
         </div>
 
-        <div class="nav-section">
-
-            <div class="nav-title">Security</div>
-
-            <div class="nav-item">
-                <div class="nav-icon">♢</div>
-                <div class="nav-text">Security Center</div>
-            </div>
-
+        <div class="nav-item"
+             onclick="document.getElementById('approvalHistorySection')?.scrollIntoView({behavior:'smooth'})">
+            <div class="nav-icon">◷</div>
+            <div class="nav-text">Approval History</div>
         </div>
 
-        <div class="protection-box">
+    </div>
 
-            <div class="protection-status">
-                <span class="status-dot"></span>
-                Protection Active
-            </div>
+    <div class="nav-section">
 
-            <div class="protection-text">
-                TrustGuard monitoring is enabled and protecting AI decisions.
-            </div>
+        <div class="nav-title">Security</div>
 
+        <div class="nav-item"
+             onclick="document.getElementById('securitySection')?.scrollIntoView({behavior:'smooth'})">
+            <div class="nav-icon">♢</div>
+            <div class="nav-text">Security Center</div>
         </div>
 
-    </aside>
+    </div>
+
+    <div class="protection-box">
+
+        <div class="protection-status">
+            <span class="status-dot"></span>
+            Protection Active
+        </div>
+
+        <div class="protection-text">
+            TrustGuard monitoring is enabled and protecting AI decisions.
+        </div>
+
+    </div>
+
+</aside>
 
 
     <!-- =========================
          MAIN
     ========================== -->
 
-    <main class="main">
+    <main id="dashboardSection" class="main">
 
         <!-- TOP BAR -->
 
@@ -1843,7 +1847,7 @@
              ANALYZER + INTELLIGENCE
         ========================== -->
 
-        <section class="dashboard-grid">
+        <section id="analyzerSection" class="dashboard-grid">
 
 
             <!-- ANALYZER -->
@@ -2177,113 +2181,112 @@
         </section>
 
 
-        <!-- =========================
-             LOWER INTELLIGENCE GRID
-        ========================== -->
+<!-- =========================
+     LOWER INTELLIGENCE GRID
+========================== -->
 
-        <section class="lower-grid">
+<section class="lower-grid">
 
 
-            <!-- SECURITY CENTER -->
+    <!-- SECURITY CENTER -->
 
-            <div class="panel">
+    <div id="securitySection" class="panel">
 
-                <div class="panel-header">
+        <div class="panel-header">
 
-                    <div>
-                        <div class="panel-title">
-                            Security Center
-                        </div>
-
-                        <div class="panel-subtitle">
-                            Active protection layers
-                        </div>
-                    </div>
-
+            <div>
+                <div class="panel-title">
+                    Security Center
                 </div>
 
-
-                <div class="security-body">
-
-                    <div class="security-item">
-
-                        <div class="security-icon">✓</div>
-
-                        <div>
-                            <div class="security-name">
-                                Rule-Based Risk Engine
-                            </div>
-
-                            <div class="security-desc">
-                                Deterministic risk assessment
-                            </div>
-                        </div>
-
-                        <div class="security-check"></div>
-
-                    </div>
-
-
-                    <div class="security-item">
-
-                        <div class="security-icon">🧠</div>
-
-                        <div>
-                            <div class="security-name">
-                                Machine Learning Detection
-                            </div>
-
-                            <div class="security-desc">
-                                Behavioral risk classification
-                            </div>
-                        </div>
-
-                        <div class="security-check"></div>
-
-                    </div>
-
-
-                    <div class="security-item">
-
-                        <div class="security-icon">◈</div>
-
-                        <div>
-                            <div class="security-name">
-                                Hybrid Decision Layer
-                            </div>
-
-                            <div class="security-desc">
-                                Rule + ML safety agreement
-                            </div>
-                        </div>
-
-                        <div class="security-check"></div>
-
-                    </div>
-
-
-                    <div class="security-item">
-
-                        <div class="security-icon">🔐</div>
-
-                        <div>
-                            <div class="security-name">
-                                Human Oversight
-                            </div>
-
-                            <div class="security-desc">
-                                Approval control for sensitive actions
-                            </div>
-                        </div>
-
-                        <div class="security-check"></div>
-
-                    </div>
-
+                <div class="panel-subtitle">
+                    Active protection layers
                 </div>
+            </div>
+
+        </div>
+
+
+        <div class="security-body">
+
+            <div class="security-item">
+
+                <div class="security-icon">✓</div>
+
+                <div>
+                    <div class="security-name">
+                        Rule-Based Risk Engine
+                    </div>
+
+                    <div class="security-desc">
+                        Deterministic risk assessment
+                    </div>
+                </div>
+
+                <div class="security-check"></div>
 
             </div>
 
+
+            <div class="security-item">
+
+                <div class="security-icon">🧠</div>
+
+                <div>
+                    <div class="security-name">
+                        Machine Learning Detection
+                    </div>
+
+                    <div class="security-desc">
+                        Behavioral risk classification
+                    </div>
+                </div>
+
+                <div class="security-check"></div>
+
+            </div>
+
+
+            <div class="security-item">
+
+                <div class="security-icon">◈</div>
+
+                <div>
+                    <div class="security-name">
+                        Hybrid Decision Layer
+                    </div>
+
+                    <div class="security-desc">
+                        Rule + ML safety agreement
+                    </div>
+                </div>
+
+                <div class="security-check"></div>
+
+            </div>
+
+
+            <div class="security-item">
+
+                <div class="security-icon">🔐</div>
+
+                <div>
+                    <div class="security-name">
+                        Human Oversight
+                    </div>
+
+                    <div class="security-desc">
+                        Approval control for sensitive actions
+                    </div>
+                </div>
+
+                <div class="security-check"></div>
+
+            </div>
+
+        </div>
+
+    </div>
 
             <!-- DECISION MODEL -->
 
@@ -2367,7 +2370,7 @@
              APPROVAL HISTORY
         ========================== -->
 
-        <section class="panel history-panel">
+        <section id="approvalHistorySection" class="panel history-panel">
 
             <div class="panel-header history-header">
 
