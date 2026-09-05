@@ -1205,6 +1205,46 @@
             box-shadow: 0 0 9px var(--green);
         }
 
+        .security-layers {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+    padding: 0 22px 20px;
+}
+
+.security-layer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.06);
+}
+
+.layer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.layer-content strong {
+    font-size: 10px;
+    color: #eef5ff;
+}
+
+.layer-content span {
+    color: #667c99;
+    font-size: 8px;
+}
+
+.security-layer .layer-status {
+    margin-left: auto;
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 900;
+}
+
         /* =========================
            DECISION MODEL
         ========================== */
@@ -2300,6 +2340,46 @@
                 <div class="panel-subtitle">
                     Active protection layers
                 </div>
+
+                <div class="security-layers">
+
+    <div class="security-layer">
+        <div class="layer-icon">🛡</div>
+        <div class="layer-content">
+            <strong>Policy Guard</strong>
+            <span>Action policy validation</span>
+        </div>
+        <div class="layer-status">ACTIVE</div>
+    </div>
+
+    <div class="security-layer">
+        <div class="layer-icon">◈</div>
+        <div class="layer-content">
+            <strong>Risk Engine</strong>
+            <span>Multi-factor risk analysis</span>
+        </div>
+        <div class="layer-status">ACTIVE</div>
+    </div>
+
+    <div class="security-layer">
+        <div class="layer-icon">⌁</div>
+        <div class="layer-content">
+            <strong>ML Intelligence</strong>
+            <span>Machine learning prediction</span>
+        </div>
+        <div class="layer-status">ACTIVE</div>
+    </div>
+
+    <div class="security-layer">
+        <div class="layer-icon">◆</div>
+        <div class="layer-content">
+            <strong>Human Oversight</strong>
+            <span>Approval protection layer</span>
+        </div>
+        <div class="layer-status">ACTIVE</div>
+    </div>
+
+</div>
             </div>
 
         </div>
