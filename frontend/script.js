@@ -828,11 +828,9 @@ function displayAnalysis(data) {
         }
     }
 
-    if (riskScore) {
-
-        riskScore.textContent =
-            String(score);
-    }
+if (riskScore) {
+    animateCounter(riskScore, Number(score));
+}
 
    updateRiskGauge(
     score,
