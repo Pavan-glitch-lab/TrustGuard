@@ -1702,7 +1702,7 @@
                     🔔
                 </div>
 
-                <div class="profile" onclick="document.getElementById('profileSection')?.scrollIntoView({behavior:'smooth'})">
+                <div class="profile" onclick="showProfile()">
 
                     <div id="userAvatar">TG</div>
 
@@ -1716,7 +1716,7 @@
                         </div>
                     </div>
 
-                    <button class="logout-btn" onclick="logout()">
+                    <button class="logout-btn" onclick="event.stopPropagation(); logout()">
                         Logout
                     </button>
 
@@ -2406,36 +2406,58 @@
             </div>
 
         </section>
-    <!-- PROFILE SECTION -->
-    <section id="profileSection" class="panel">
-        <div class="panel-header">
-            <div>
-                <div class="panel-kicker">ACCOUNT</div>
-                <h2>Profile</h2>
-            </div>
+<!-- PROFILE SECTION -->
+<section id="profileSection" class="panel">
 
-            <span class="status-badge">PROTECTED</span>
+    <div class="panel-header">
+
+        <div>
+            <div class="panel-kicker">ACCOUNT</div>
+            <h2>Profile</h2>
         </div>
 
-        <div class="profile-details">
-            <div class="profile-avatar-large" id="profileAvatar">
-                TG
-            </div>
+        <span class="status-badge">PROTECTED</span>
 
-            <div class="profile-info">
-                <h3 id="profileName">Protected Account</h3>
-                <p id="profileEmail">Account email</p>
-                <span class="profile-role">
-                    Security Administrator
+    </div>
+
+    <div class="profile-details">
+
+        <div
+            class="profile-avatar-large"
+            id="profileAvatar"
+        >
+            TG
+        </div>
+
+        <div class="profile-info">
+
+            <h3 id="profileName">
+                Protected Account
+            </h3>
+
+            <p>
+                Email:
+                <span id="profileEmail">
+                    Loading...
                 </span>
-            </div>
+            </p>
+
+            <p>
+                Login Method:
+                <span id="profileLoginMethod">
+                    Loading...
+                </span>
+            </p>
+
+            <span class="profile-role">
+                Security Administrator
+            </span>
+
         </div>
-    </section>
 
-</main>
-    
+    </div>
 
-</div>
+</section>
 
 
 <!-- EXISTING TRUSTGUARD LOGIC -->
@@ -2627,6 +2649,46 @@ if (analyzeButton && actionInput) {
     });
 
 </script>
+        
+<script>
+function showProfile() {
 
+    const user = window.trustGuardUser;
+
+    if (!user) {
+        alert("Profile information is still loading.");
+        return;
+    }
+
+    const name = user.full_name || "User";
+    const email = user.email || "Not available";
+
+    const method =
+        user.login_method === "google"
+            ? "Google"
+            : "Password";
+
+    document.getElementById("profileName").textContent = name;
+    document.getElementById("profileEmail").textContent = email;
+    document.getElementById("profileLoginMethod").textContent = method;
+
+    const initials = name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(word => word.charAt(0).toUpperCase())
+        .join("");
+
+    document.getElementById("profileAvatar").textContent =
+        initials || "U";
+
+    document.getElementById("profileSection").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+    
+</script>
+        
 </body>
 </html>
