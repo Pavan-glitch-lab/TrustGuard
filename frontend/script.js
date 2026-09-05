@@ -779,11 +779,27 @@ function displayAnalysis(data) {
 
     if (riskLevel) {
 
-        riskLevel.textContent =
-            String(
-                finalRisk
-            ).toUpperCase();
+    riskLevel.textContent =
+        String(
+            finalRisk
+        ).toUpperCase();
+
+    riskLevel.className = "result-status";
+
+    if (finalRisk === "Low") {
+        riskLevel.style.color = "#9eeed0";
+        riskLevel.style.background = "rgba(38,230,165,.09)";
+        riskLevel.style.borderColor = "rgba(38,230,165,.18)";
+    } else if (finalRisk === "Medium") {
+        riskLevel.style.color = "#ffd98a";
+        riskLevel.style.background = "rgba(255,193,7,.09)";
+        riskLevel.style.borderColor = "rgba(255,193,7,.18)";
+    } else {
+        riskLevel.style.color = "#ff9b9b";
+        riskLevel.style.background = "rgba(255,70,70,.09)";
+        riskLevel.style.borderColor = "rgba(255,70,70,.18)";
     }
+}
 
     if (decision) {
 
