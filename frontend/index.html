@@ -871,6 +871,25 @@
             transform: translateY(0);
         }
 
+        #analyzeBtn:disabled {
+    opacity: .65;
+    cursor: wait;
+    transform: none;
+    box-shadow:
+        0 0 18px rgba(23,191,233,.35),
+        0 0 35px rgba(50,109,255,.18);
+    animation: analyzingPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes analyzingPulse {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.25);
+    }
+}
+
         /* =========================
            RISK INTELLIGENCE
         ========================== */
