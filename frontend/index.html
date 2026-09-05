@@ -752,6 +752,31 @@
     transform: translateY(-2px);
     box-shadow: 0 12px 35px rgba(30,130,255,.12);
 }
+        .analyzer.scanning-active {
+    animation: analyzerRGBPulse 1.8s linear infinite;
+}
+
+@keyframes analyzerRGBPulse {
+    0% {
+        box-shadow: 0 0 18px rgba(0,255,255,.18);
+        border-color: rgba(0,255,255,.35);
+    }
+
+    33% {
+        box-shadow: 0 0 25px rgba(0,120,255,.22);
+        border-color: rgba(0,120,255,.4);
+    }
+
+    66% {
+        box-shadow: 0 0 28px rgba(255,0,255,.2);
+        border-color: rgba(255,0,255,.4);
+    }
+
+    100% {
+        box-shadow: 0 0 18px rgba(0,255,120,.18);
+        border-color: rgba(0,255,120,.35);
+    }
+}
 
         .analyzer-body {
             padding: 0 24px 24px;
@@ -2948,7 +2973,7 @@ function runScanSequence() {
     if (!scanSequence) return;
 
     scanSequence.classList.remove("hidden");
-
+    document.querySelector(".analyzer")?.classList.add("scanning-active");
     if (analyzeButton) {
     analyzeButton.disabled = true;
     analyzeButton.dataset.originalText = analyzeButton.innerHTML;
@@ -2992,8 +3017,9 @@ function runScanSequence() {
     }
 
     setTimeout(() => {
-        scanSequence.classList.add("hidden");
-    }, 500);
+    document.querySelector(".analyzer")?.classList.remove("scanning-active");
+    scanSequence.classList.add("hidden");
+}, 500);
 
     return;
 }
