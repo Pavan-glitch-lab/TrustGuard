@@ -926,7 +926,63 @@
                 font-size: 26px;
             }
         }
+/* AUTH PAGE PREMIUM POLISH */
 
+body {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(32,217,255,.06), transparent 35%),
+        radial-gradient(circle at 80% 80%, rgba(80,40,255,.06), transparent 35%);
+}
+
+input {
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+}
+
+input:focus {
+    border-color: rgba(32,217,255,.65);
+    box-shadow:
+        0 0 0 2px rgba(32,217,255,.06),
+        0 0 18px rgba(32,217,255,.12);
+}
+
+button[type="submit"] {
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform .25s ease,
+        filter .25s ease,
+        box-shadow .25s ease;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 10px 28px rgba(32,217,255,.18);
+}
+
+button[type="submit"]:active {
+    transform: scale(.98);
+}
+
+a {
+    transition:
+        color .2s ease,
+        text-shadow .2s ease;
+}
+
+a:hover {
+    text-shadow: 0 0 10px currentColor;
+}
+
+@media (max-width: 600px) {
+    button[type="submit"] {
+        width: 100%;
+    }
+}
+        
     </style>
 
 </head>
