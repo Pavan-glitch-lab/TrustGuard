@@ -2165,6 +2165,94 @@ box-shadow:
                 width: 100%;
             }
         }
+        /* PREMIUM SCAN EFFECTS */
+
+.scan-progress {
+    position: relative;
+    box-shadow:
+        0 0 8px rgba(0,255,255,.12),
+        inset 0 0 6px rgba(0,120,255,.15);
+}
+
+.scan-status {
+    letter-spacing: 1.4px;
+    filter: brightness(1.05);
+}
+
+.scan-stage {
+    position: relative;
+    transition:
+        color .3s ease,
+        text-shadow .3s ease,
+        transform .3s ease,
+        filter .3s ease;
+}
+
+.scan-stage.active {
+    transform: translateY(-1px) scale(1.03);
+}
+
+.complete-stage {
+    color: #9eeed0;
+    text-shadow:
+        0 0 8px rgba(38,230,165,.55),
+        0 0 18px rgba(38,230,165,.25);
+}
+
+.analyzer.scanning-active {
+    position: relative;
+    overflow: hidden;
+}
+
+.analyzer.scanning-active::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0,255,255,.025),
+        transparent
+    );
+    animation: analyzerSweep 1.8s linear infinite;
+}
+
+@keyframes analyzerSweep {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+#analyzeBtn:disabled::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -30%;
+    width: 25%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.5),
+        transparent
+    );
+    transform: skewX(-20deg);
+    animation: analyzeButtonScan .8s linear infinite;
+}
+
+@keyframes analyzeButtonScan {
+    0% {
+        left: -30%;
+    }
+    100% {
+        left: 130%;
+    }
+}
     </style>
 </head>
 
