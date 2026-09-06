@@ -2316,6 +2316,107 @@ box-shadow:
 .complete-stage {
     font-weight: 900;
 }
+
+/* RISK INTELLIGENCE PREMIUM */
+
+.risk-intelligence,
+.risk-card,
+.result-card {
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        border-color .3s ease;
+}
+
+.risk-intelligence:hover,
+.risk-card:hover,
+.result-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 14px 35px rgba(32,217,255,.10),
+        0 0 25px rgba(0,120,255,.06);
+}
+
+/* Risk gauge glow */
+.risk-gauge,
+.risk-meter,
+.gauge-container {
+    filter: drop-shadow(0 0 8px rgba(32,217,255,.15));
+}
+
+/* Risk score emphasis */
+.risk-score {
+    text-shadow:
+        0 0 10px currentColor,
+        0 0 25px currentColor;
+    transition:
+        color .4s ease,
+        text-shadow .4s ease,
+        transform .3s ease;
+}
+
+.risk-score:hover {
+    transform: scale(1.04);
+}
+
+/* Result card entrance */
+.result-card {
+    animation: resultCardIn .5s ease both;
+}
+
+@keyframes resultCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Result metrics */
+.result-card .metric,
+.result-card .stat,
+.risk-intelligence .metric {
+    transition:
+        transform .25s ease,
+        text-shadow .25s ease;
+}
+
+.result-card .metric:hover,
+.result-card .stat:hover,
+.risk-intelligence .metric:hover {
+    transform: translateY(-2px);
+    text-shadow: 0 0 12px rgba(32,217,255,.45);
+}
+
+/* Risk intelligence glow */
+.risk-intelligence {
+    position: relative;
+    overflow: hidden;
+}
+
+.risk-intelligence::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        110deg,
+        transparent 20%,
+        rgba(32,217,255,.035) 50%,
+        transparent 80%
+    );
+    transform: translateX(-100%);
+    animation: intelligenceSweep 4s linear infinite;
+}
+
+@keyframes intelligenceSweep {
+    to {
+        transform: translateX(100%);
+    }
+}
         
     </style>
 </head>
