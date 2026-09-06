@@ -228,6 +228,58 @@ TrustGuard/
 
 ---
 
+## 🔬 Research & Methodology
+
+TrustGuard AI uses a multi-factor risk assessment approach designed to help control potentially harmful or high-impact AI-agent actions.
+
+### Risk Factors
+
+Each AI-agent action is evaluated across five risk dimensions:
+
+| Risk Factor | Description |
+|---|---|
+| 🔐 Privacy Risk | Potential exposure or misuse of sensitive information |
+| 💰 Financial Risk | Potential financial loss or unauthorized monetary activity |
+| 🗄️ Data Modification Risk | Potential modification, deletion, or corruption of data |
+| ⚠️ Irreversibility Risk | Difficulty of reversing the action once executed |
+| 🌐 External Impact Risk | Potential impact on external systems, users, or organizations |
+
+Each factor receives a score from **0 to 5**, producing a total risk score from **0 to 25**.
+
+### Risk Classification
+
+| Total Score | Risk Level | Required Decision |
+|---:|---|---|
+| 0–8 | 🟢 Low | Autonomous Execution |
+| 9–16 | 🟡 Medium | User Confirmation |
+| 17–25 | 🔴 High | Human Approval |
+
+This approach ensures that actions with greater potential impact receive stronger levels of oversight.
+
+### Hybrid Risk Intelligence
+
+TrustGuard combines two complementary approaches:
+
+1. **Rule-Based Risk Engine**  
+   A deterministic five-factor assessment evaluates the characteristics and potential impact of an AI-agent action.
+
+2. **Machine Learning Prediction**  
+   A trained machine-learning model provides an additional prediction of the action's risk level.
+
+3. **Hybrid Decision Engine**  
+   The final decision considers both assessments and selects the higher risk level when they differ, following a safety-oriented approach.
+
+### Research Objective
+
+The goal of TrustGuard AI is to explore practical methods for governing autonomous AI agents by making their actions:
+
+- **Observable**
+- **Risk-aware**
+- **Explainable**
+- **Appropriately controlled**
+
+The system demonstrates how AI-agent actions can be evaluated before execution and routed through different levels of human oversight based on their potential impact.
+
 ## 🎯 Project Goal
 
 TrustGuard AI explores how AI agents can operate safely in environments where actions may affect:
