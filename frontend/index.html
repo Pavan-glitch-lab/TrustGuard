@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrustGuard AI — Security Operations Center</title>
 
+
+    
     <style>
         * {
             box-sizing: border-box;
@@ -2253,6 +2255,68 @@ box-shadow:
         left: 130%;
     }
 }
+
+/* ANALYZER POLISH */
+
+.analyzer h2,
+.analyzer h3 {
+    text-shadow: 0 0 10px rgba(32,217,255,.12);
+}
+
+#actionInput {
+    transition:
+        border-color .3s ease,
+        box-shadow .3s ease,
+        background .3s ease;
+}
+
+#actionInput:focus {
+    border-color: rgba(32,217,255,.55);
+    box-shadow:
+        0 0 0 2px rgba(32,217,255,.06),
+        0 0 18px rgba(32,217,255,.12);
+    background: rgba(32,217,255,.025);
+}
+
+#analyzeBtn {
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        filter .25s ease;
+}
+
+#analyzeBtn:hover {
+    filter: brightness(1.12);
+}
+
+#scanSequence {
+    backdrop-filter: blur(6px);
+}
+
+.scan-status {
+    text-shadow:
+        0 0 8px currentColor,
+        0 0 18px currentColor;
+}
+
+.scan-progress {
+    box-shadow:
+        0 0 8px rgba(0,255,255,.15),
+        inset 0 0 8px rgba(0,120,255,.12);
+}
+
+.scan-stage.active {
+    transform: translateY(-1px) scale(1.04);
+}
+
+.scan-stage:not(.active):not(.complete-stage) {
+    opacity: .65;
+}
+
+.complete-stage {
+    font-weight: 900;
+}
+        
     </style>
 </head>
 
