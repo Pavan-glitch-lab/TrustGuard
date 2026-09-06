@@ -4,7 +4,7 @@
 
 TrustGuard AI is an AI-agent risk oversight platform that analyzes agent actions, evaluates security and operational risk, and determines whether an action should execute autonomously, require user confirmation, or require human approval.
 
-**Live Demo:** https://trustguard-production-2dba.up.railway.app/
+[🚀 Live Demo](https://trustguard-production-2dba.up.railway.app/)
 
 ---
 
