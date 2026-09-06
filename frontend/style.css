@@ -1569,3 +1569,142 @@ a {
         width: 100%;
     }
 }
+
+/* AUTH SECURITY UI ENHANCEMENT */
+
+.auth-page {
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-page::before {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    top: -180px;
+    left: -160px;
+    border: 1px solid rgba(99,102,241,.10);
+    border-radius: 50%;
+    box-shadow:
+        0 0 80px rgba(99,102,241,.06);
+    pointer-events: none;
+}
+
+.auth-page::after {
+    content: "";
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    right: -130px;
+    bottom: -140px;
+    border: 1px solid rgba(6,182,212,.10);
+    border-radius: 50%;
+    box-shadow:
+        0 0 70px rgba(6,182,212,.06);
+    pointer-events: none;
+}
+
+.auth-card {
+    position: relative;
+    z-index: 2;
+    animation: authCardEnter .55s ease both;
+}
+
+@keyframes authCardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.auth-brand .brand-icon,
+.auth-logo {
+    animation: authLogoPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes authLogoPulse {
+    0%, 100% {
+        box-shadow:
+            0 8px 25px rgba(99,102,241,.25);
+    }
+
+    50% {
+        box-shadow:
+            0 8px 30px rgba(6,182,212,.35),
+            0 0 18px rgba(99,102,241,.12);
+    }
+}
+
+.auth-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.35),
+        transparent
+    );
+    transform: skewX(-20deg);
+    animation: authButtonShine 3.5s ease-in-out infinite;
+}
+
+@keyframes authButtonShine {
+    0%, 65% {
+        left: -40%;
+    }
+
+    100% {
+        left: 130%;
+    }
+}
+
+.auth-message {
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+}
+
+.auth-message.success {
+    text-shadow:
+        0 0 10px rgba(16,185,129,.25);
+}
+
+.auth-message.error {
+    text-shadow:
+        0 0 10px rgba(239,68,68,.20);
+}
+
+.security-note {
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+}
+
+.security-note:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .auth-card,
+    .auth-brand .brand-icon,
+    .auth-logo,
+    .auth-button::after {
+        animation: none !important;
+    }
+}
