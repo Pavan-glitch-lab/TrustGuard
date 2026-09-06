@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://trustguard-production-2dba.up.railway.app/sitemap.xml
