@@ -2661,6 +2661,148 @@ box-shadow:
 .dashboard-card h3 {
     text-shadow: 0 0 10px rgba(32,217,255,.10);
 }
+
+/* MOBILE + LOADING POLISH */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    transition: opacity .35s ease;
+}
+
+/* Smooth sections */
+section,
+.panel,
+.card {
+    animation: sectionFadeIn .45s ease both;
+}
+
+@keyframes sectionFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Better mobile layout */
+@media (max-width: 900px) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .main-content,
+    .content {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .main-content,
+    .content {
+        margin-left: 0;
+        padding: 16px;
+    }
+
+    .stats-grid,
+    .dashboard-grid,
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analyzer {
+        min-height: auto;
+    }
+
+    #analyzeBtn {
+        width: 100%;
+    }
+
+    .scan-stages {
+        gap: 3px;
+    }
+
+    .scan-stage {
+        font-size: 6px;
+    }
+}
+
+/* Buttons feel responsive */
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:active {
+    transform: scale(.97);
+}
+
+/* Hidden elements */
+.hidden {
+    display: none !important;
+}
+
+/* Loading pulse */
+.loading,
+.is-loading {
+    animation: loadingPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% {
+        opacity: .65;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Smooth hover for interactive elements */
+button,
+a,
+input,
+textarea,
+select {
+    transition:
+        transform .2s ease,
+        box-shadow .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+}
+
+/* Focus accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 1px solid rgba(32,217,255,.7);
+    outline-offset: 3px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+    }
+}
         
     </style>
 </head>
