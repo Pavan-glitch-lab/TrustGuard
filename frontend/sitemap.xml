@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>https://trustguard-1-fsvc.onrender.com/</loc>
+        <loc>https://trustguard-production-2dba.up.railway.app/</loc>
     </url>
 
     <url>
-        <loc>https://trustguard-1-fsvc.onrender.com/login.html</loc>
+        <loc>https://trustguard-production-2dba.up.railway.app/login.html</loc>
     </url>
 
     <url>
-        <loc>https://trustguard-1-fsvc.onrender.com/register.html</loc>
+        <loc>https://trustguard-production-2dba.up.railway.app/register.html</loc>
     </url>
 
     <url>
-        <loc>https://trustguard-1-fsvc.onrender.com/reset-password.html</loc>
+        <loc>https://trustguard-production-2dba.up.railway.app/reset-password.html</loc>
     </url>
 
 </urlset>
