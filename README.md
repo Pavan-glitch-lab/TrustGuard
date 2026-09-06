@@ -301,6 +301,14 @@ https://trustguard-production-2dba.up.railway.app/
 
 ---
 
+## ⚠️ Disclaimer
+
+TrustGuard AI is a research and educational project demonstrating AI-agent risk assessment and governance concepts.
+
+It should not be considered a complete cybersecurity solution, financial authorization system, or guarantee against AI-agent failures or security incidents.
+
+Users should independently evaluate and secure any deployment based on their specific requirements and threat model.
+
 ## 📌 Project Status
 
 **Production deployed and operational.**
