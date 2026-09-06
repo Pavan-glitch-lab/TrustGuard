@@ -1753,6 +1753,7 @@ box-shadow:
 }
 
 #scanProgressBar {
+    position: relative;
     width: 0%;
     height: 100%;
     border-radius: inherit;
@@ -1769,6 +1770,32 @@ box-shadow:
         0 0 10px rgb(0,255,255),
         0 0 20px rgb(255,0,255);
     animation: progressRGB 1.5s linear infinite;
+    overflow: hidden;
+}
+
+#scanProgressBar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -30%;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.85),
+        transparent
+    );
+    animation: progressShimmer 1s linear infinite;
+}
+
+@keyframes progressShimmer {
+    0% {
+        left: -30%;
+    }
+    100% {
+        left: 130%;
+    }
 }
 
 @keyframes progressRGB {
