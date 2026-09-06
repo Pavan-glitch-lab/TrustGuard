@@ -1664,6 +1664,28 @@ box-shadow:
     animation: rgbStatusPulse 1.5s linear infinite;
 }
 
+.scan-status {
+    position: relative;
+    text-transform: uppercase;
+    text-shadow:
+        0 0 8px currentColor,
+        0 0 18px currentColor;
+    animation:
+        rgbStatusPulse 1.5s linear infinite,
+        statusFlicker .12s ease-in-out infinite alternate;
+}
+
+@keyframes statusFlicker {
+    from {
+        opacity: .82;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(.5px);
+    }
+}
+        
 @keyframes rgbStatusPulse {
     0% {
         color: rgb(0,255,255);
