@@ -1759,10 +1759,23 @@ box-shadow:
     transition: .3s ease;
 }
 
-..scan-stage.active {
-    animation: stagePulse .8s ease-in-out infinite;
+.scan-stage.active {
+    animation:
+        stagePulse .8s ease-in-out infinite,
+        stageGlowRGB 1.2s linear infinite;
 }
 
+@keyframes stageGlowRGB {
+    0% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.7);
+    }
+    100% {
+        filter: brightness(1);
+    }
+}
 .scan-stage.active:nth-child(1) {
     color: rgb(0,255,255);
     text-shadow: 0 0 12px rgb(0,255,255);
@@ -1787,6 +1800,27 @@ box-shadow:
     color: rgb(255,220,0);
     text-shadow: 0 0 15px rgb(255,220,0);
 }
+
+.scan-stage.active:nth-child(1) {
+    animation: stagePulse .8s ease-in-out infinite, stageGlowCyan 1.2s ease-in-out infinite;
+}
+
+.scan-stage.active:nth-child(2) {
+    animation: stagePulse .8s ease-in-out infinite, stageGlowBlue 1.2s ease-in-out infinite;
+}
+
+.scan-stage.active:nth-child(3) {
+    animation: stagePulse .8s ease-in-out infinite, stageGlowMagenta 1.2s ease-in-out infinite;
+}
+
+.scan-stage.active:nth-child(4) {
+    animation: stagePulse .8s ease-in-out infinite, stageGlowGreen 1.2s ease-in-out infinite;
+}
+
+.scan-stage.active:nth-child(5) {
+    animation: stagePulse .8s ease-in-out infinite, stageGlowYellow 1.2s ease-in-out infinite;
+}
+        
 .complete-stage {
     color: #9eeed0;
     text-shadow: 0 0 10px rgba(38,230,165,.55);
@@ -1795,6 +1829,23 @@ box-shadow:
 .complete-stage.active {
     color: #9eeed0;
     text-shadow: 0 0 18px rgba(38,230,165,.9);
+}
+
+.scan-stage.complete-stage.active {
+    color: #9eeed0;
+    text-shadow: 0 0 18px rgba(38,230,165,.9);
+    animation:
+        stagePulse .8s ease-in-out infinite,
+        stageGlowComplete 1.2s ease-in-out infinite;
+}
+
+@keyframes stageGlowComplete {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.6);
+    }
 }
 @keyframes stagePulse {
     0%, 100% {
