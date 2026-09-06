@@ -2535,6 +2535,132 @@ box-shadow:
 .approval-history h2 {
     text-shadow: 0 0 12px rgba(32,217,255,.12);
 }
+
+/* DASHBOARD PREMIUM POLISH */
+
+/* Sidebar */
+.sidebar {
+    transition: box-shadow .3s ease;
+}
+
+.sidebar:hover {
+    box-shadow:
+        4px 0 30px rgba(32,217,255,.06);
+}
+
+.sidebar a,
+.sidebar button,
+.nav-item {
+    transition:
+        transform .25s ease,
+        color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+}
+
+.sidebar a:hover,
+.sidebar button:hover,
+.nav-item:hover {
+    transform: translateX(4px);
+}
+
+/* Dashboard cards */
+.stat-card,
+.dashboard-card,
+.info-card {
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        border-color .3s ease;
+}
+
+.stat-card:hover,
+.dashboard-card:hover,
+.info-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 15px 35px rgba(32,217,255,.08),
+        0 0 22px rgba(0,120,255,.05);
+}
+
+/* Animated card shine */
+.stat-card,
+.dashboard-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::after,
+.dashboard-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.035),
+        transparent
+    );
+    transform: skewX(-20deg);
+    pointer-events: none;
+    animation: cardShine 5s ease-in-out infinite;
+}
+
+@keyframes cardShine {
+    0%, 70% {
+        left: -100%;
+    }
+    100% {
+        left: 150%;
+    }
+}
+
+/* Profile */
+.profile-card,
+.profile-section {
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+}
+
+.profile-card:hover,
+.profile-section:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 12px 30px rgba(32,217,255,.08);
+}
+
+/* Protection status */
+.protection-active,
+.protection-status {
+    transition:
+        transform .25s ease,
+        filter .25s ease;
+}
+
+.protection-active:hover,
+.protection-status:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
+
+/* Green protection glow */
+.protection-active {
+    text-shadow:
+        0 0 8px rgba(38,230,165,.5),
+        0 0 18px rgba(38,230,165,.2);
+}
+
+/* Global card title glow */
+.card h2,
+.card h3,
+.dashboard-card h2,
+.dashboard-card h3 {
+    text-shadow: 0 0 10px rgba(32,217,255,.10);
+}
         
     </style>
 </head>
