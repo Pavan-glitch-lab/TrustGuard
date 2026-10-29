@@ -5,7 +5,7 @@
 
 "use strict";
 const API_BASE_URL =
-    "https://trustguard-production.up.railway.app";
+    window.location.origin;
 
 
 /* ============================================================
